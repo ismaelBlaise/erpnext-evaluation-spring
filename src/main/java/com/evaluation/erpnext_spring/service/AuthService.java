@@ -5,7 +5,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
+import java.util.Collections;
 import com.evaluation.erpnext_spring.dto.ERPNextAuthResponse;
 import com.evaluation.erpnext_spring.dto.LoginRequestDTO;
 import com.evaluation.erpnext_spring.dto.LoginResponseDTO;
@@ -22,19 +22,18 @@ public class AuthService {
         this.restTemplate = restTemplate;
     }
 
-    @SuppressWarnings("null")
     public LoginResponseDTO login(LoginRequestDTO loginRequest) {
-        
         String loginUrl = erpnextApiUrl + "/api/method/login";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-        
-        String requestBody = "usr=" + loginRequest.getUsername() + 
-                           "&pwd=" + loginRequest.getPassword();
+        // Create JSON request body
+        String requestBody = String.format("{\"usr\":\"%s\",\"pwd\":\"%s\"}", 
+            loginRequest.getUsername(), 
+            loginRequest.getPassword());
 
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
 
         try {
@@ -57,11 +56,11 @@ public class AuthService {
             if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
                 return new LoginResponseDTO(false, "Invalid username or password");
             }
-            return new LoginResponseDTO(false, "Login failed: " + e.getMessage());
+            return new LoginResponseDTO(false, "Login failed: " + e.getResponseBodyAsString());
         } catch (Exception e) {
-            return new LoginResponseDTO(false, "An error occurred during login");
+            return new LoginResponseDTO(false, "An error occurred during login: " + e.getMessage());
         }
 
-        return new LoginResponseDTO(false, "Login failed");
+        return new LoginResponseDTO(false, "Login failed with unknown error");
     }
 }
