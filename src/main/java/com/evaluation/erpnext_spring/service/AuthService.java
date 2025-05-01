@@ -35,6 +35,8 @@ public class AuthService {
             loginRequest.getUsername(), 
             loginRequest.getPassword());
 
+        // System.out.println(requestBody);
+
         HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
 
         try {
@@ -46,6 +48,7 @@ public class AuthService {
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 ERPNextAuthResponse authResponse = response.getBody();
+                // System.out.println(authResponse.getSid());
                 return new LoginResponseDTO(
                     true, 
                     "Login successful", 
@@ -53,10 +56,11 @@ public class AuthService {
                     authResponse.getFullName()
                 );
             }
+
         } catch (HttpClientErrorException e) {
-            // if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-            //     return new LoginResponseDTO(false, "Invalid username or password");
-            // }
+            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                return new LoginResponseDTO(false, "Invalid username or password");
+            }
             return new LoginResponseDTO(false, "Login failed: " + e.getMessage());
         } catch (Exception e) {
             return new LoginResponseDTO(false, "An error occurred during login: " + e.getMessage());

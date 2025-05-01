@@ -51,12 +51,12 @@ public class AuthController {
         String sid = (String) session.getAttribute("sid");
         String fullName = (String) session.getAttribute("fullName");
         
-        if (sid == null || sid.isEmpty()) {
-            modelAndView.setViewName("redirect:/");
-        } else {
+        // if (sid == null || sid.isEmpty()) {
+        //     modelAndView.setViewName("redirect:/");
+        // } else {
             modelAndView.setViewName("dashboard");
             modelAndView.addObject("fullName", fullName);
-        }
+        // }
         return modelAndView;
     }
 
