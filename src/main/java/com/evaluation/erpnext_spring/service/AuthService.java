@@ -15,6 +15,7 @@ import com.evaluation.erpnext_spring.dto.LoginResponseDTO;
 @Service
 public class AuthService {
 
+    
     private final RestTemplate restTemplate;
 
     @Value("${erpnext.api.url}")
