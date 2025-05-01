@@ -20,7 +20,7 @@ public class SupplierController {
 
     @Autowired
     private  SupplierService supplierService;
-
+    
 
     @GetMapping
     public ModelAndView selectSupplier(HttpSession session,
@@ -49,7 +49,7 @@ public class SupplierController {
         } catch (Exception e) {
             e.getMessage();
             modelAndView.addObject("error", e.getMessage());
-            modelAndView.addObject("page", "suppliers/error");
+            modelAndView.addObject("page", "error");
         }
         return modelAndView;
     }
