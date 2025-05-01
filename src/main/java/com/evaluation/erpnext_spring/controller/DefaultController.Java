@@ -1,25 +1,27 @@
 package com.evaluation.erpnext_spring.controller;
 
-import com.evaluation.erpnext_spring.dto.LoginRequestDTO;
-import com.evaluation.erpnext_spring.dto.LoginResponseDTO;
-import com.evaluation.erpnext_spring.service.AuthService;
-import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.evaluation.erpnext_spring.dto.LoginRequestDTO;
+import com.evaluation.erpnext_spring.dto.LoginResponseDTO;
+import com.evaluation.erpnext_spring.service.AuthService;
+
+import jakarta.servlet.http.HttpSession;
+
 @Controller
-public class AuthController {
+@RequestMapping("/")
+public class DefaultController {
 
-    private final AuthService authService;
+    @Autowired
+    private AuthService authService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
-
-    @GetMapping("/login")
+    @GetMapping
     public ModelAndView showLoginForm() {
         ModelAndView modelAndView = new ModelAndView("login");
         modelAndView.addObject("loginRequest", new LoginRequestDTO());
@@ -50,7 +52,7 @@ public class AuthController {
         String fullName = (String) session.getAttribute("fullName");
         
         if (sid == null || sid.isEmpty()) {
-            modelAndView.setViewName("redirect:/login");
+            modelAndView.setViewName("redirect:/");
         } else {
             modelAndView.setViewName("dashboard");
             modelAndView.addObject("fullName", fullName);
@@ -61,6 +63,6 @@ public class AuthController {
     @GetMapping("/logout")
     public ModelAndView logout(HttpSession session) {
         session.invalidate();
-        return new ModelAndView("redirect:/login");
+        return new ModelAndView("redirect:/");
     }
 }
