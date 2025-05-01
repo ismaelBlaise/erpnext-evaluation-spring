@@ -55,7 +55,7 @@ public class AuthService {
                 ERPNextAuthResponse authResponse = response.getBody();
                
                 authResponse.setSid(sid);
-                // System.out.println("SID: "+authResponse.getSid());
+                System.out.println("SID: "+authResponse.getSid());
                 return new LoginResponseDTO(
                     true, 
                     "Login successful", 
