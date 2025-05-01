@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import java.util.Collections;
+import java.util.List;
+
 import com.evaluation.erpnext_spring.dto.ERPNextAuthResponse;
 import com.evaluation.erpnext_spring.dto.LoginRequestDTO;
 import com.evaluation.erpnext_spring.dto.LoginResponseDTO;
@@ -45,10 +47,14 @@ public class AuthService {
                 request, 
                 ERPNextAuthResponse.class
             );
+            List<String> cookies = response.getHeaders().get("Set-Cookie");
+            String sid = extractSidFromCookies(cookies);
 
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+            if (sid != null &&  response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 ERPNextAuthResponse authResponse = response.getBody();
-                // System.out.println(authResponse.getSid());
+               
+                authResponse.setSid(sid);
+                // System.out.println("SID: "+authResponse.getSid());
                 return new LoginResponseDTO(
                     true, 
                     "Login successful", 
@@ -67,5 +73,20 @@ public class AuthService {
         }
 
         return new LoginResponseDTO(false, "Login failed with unknown error");
+    }
+
+    private String extractSidFromCookies(List<String> cookies) {
+        if (cookies == null) return null;
+        
+        for (String cookie : cookies) {
+            if (cookie.contains("sid=")) {
+                // Extraire la valeur du sid
+                String[] parts = cookie.split(";")[0].split("=");
+                if (parts.length > 1) {
+                    return parts[1];
+                }
+            }
+        }
+        return null;
     }
 }
