@@ -53,6 +53,7 @@ public class AuthController {
         
         if (sid == null || sid.isEmpty()) {
             modelAndView.setViewName("redirect:/");
+            
         } else {
             modelAndView.setViewName("template");
             modelAndView.addObject("page", "dashboard");
