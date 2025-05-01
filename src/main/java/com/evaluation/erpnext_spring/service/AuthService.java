@@ -22,6 +22,7 @@ public class AuthService {
         this.restTemplate = restTemplate;
     }
 
+    @SuppressWarnings("null")
     public LoginResponseDTO login(LoginRequestDTO loginRequest) {
         
         String loginUrl = erpnextApiUrl + "/api/method/login";
@@ -29,7 +30,7 @@ public class AuthService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // ERPNext expects form-urlencoded data for login
+        
         String requestBody = "usr=" + loginRequest.getUsername() + 
                            "&pwd=" + loginRequest.getPassword();
 
