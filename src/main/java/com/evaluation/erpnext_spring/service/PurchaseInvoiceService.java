@@ -1,0 +1,65 @@
+package com.evaluation.erpnext_spring.service;
+
+import com.evaluation.erpnext_spring.dto.PurchaseInvoiceListResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import jakarta.servlet.http.HttpSession;
+import java.util.Collections;
+
+@Service
+public class PurchaseInvoiceService {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Value("${erpnext.api.url}")
+    private String erpnextApiUrl;
+
+    public PurchaseInvoiceListResponse getPurchaseInvoices(HttpSession session, int page, int size) {
+        String sid = (String) session.getAttribute("sid");
+        if (sid == null || sid.isEmpty()) {
+            throw new RuntimeException("Session not authenticated");
+        }
+
+        int offset = page * size;
+
+        String fields = "[\"name\",\"title\",\"supplier\",\"supplier_name\",\"supplier_address\",\"contact_person\"," +
+                "\"contact_email\",\"contact_mobile\",\"company\",\"posting_date\",\"due_date\",\"bill_date\"," +
+                "\"currency\",\"grand_total\",\"base_grand_total\",\"net_total\",\"base_total\"," +
+                "\"base_total_taxes_and_charges\",\"total_taxes_and_charges\",\"paid_amount\",\"outstanding_amount\"," +
+                "\"status\",\"is_paid\",\"is_return\",\"return_against\",\"amended_from\",\"tax_id\",\"tax_category\"," +
+                "\"tax_withholding_category\",\"mode_of_payment\",\"payment_terms_template\",\"cost_center\",\"project\"," +
+                "\"update_stock\",\"shipping_address\",\"dispatch_address\",\"remarks\",\"terms\"]";
+
+        String url = String.format("%s/api/resource/Purchase Invoice?fields=%s&limit=%d&start=%d",
+                erpnextApiUrl, fields, size, offset);
+
+        System.out.println(url);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Cookie", "sid=" + sid);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<PurchaseInvoiceListResponse> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    request,
+                    PurchaseInvoiceListResponse.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                return response.getBody();
+            } else {
+                throw new RuntimeException("Failed to fetch purchase invoices: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error while fetching purchase invoices: " + e.getMessage(), e);
+        }
+    }
+}
