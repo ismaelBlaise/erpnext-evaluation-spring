@@ -34,8 +34,8 @@ public class PurchaseInvoiceService {
                 "\"tax_withholding_category\",\"mode_of_payment\",\"payment_terms_template\",\"cost_center\",\"project\"," +
                 "\"update_stock\",\"shipping_address\",\"dispatch_address\",\"remarks\",\"terms\"]";
 
-        String url = String.format("%s/api/resource/Purchase Invoice?fields=%s&limit=%d&start=%d",
-                erpnextApiUrl, fields, size, offset);
+        String url = String.format("%s/api/resource/Purchase Invoice?fields=%s&limit_start=%d&limit_page_length=%d",
+                erpnextApiUrl, fields, offset,size);
 
         System.out.println(url);
 

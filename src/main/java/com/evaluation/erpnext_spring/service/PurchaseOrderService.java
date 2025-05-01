@@ -32,8 +32,8 @@ public class PurchaseOrderService {
 
         String filters = String.format("[[\"supplier\", \"=\", \"%s\"]]", supplierId);
 
-        String url = String.format("%s/api/resource/Purchase Order?filters=%s&fields=%s&limit=%d&start=%d",
-                erpnextApiUrl, filters, fields, size, offset);
+        String url = String.format("%s/api/resource/Purchase Order?filters=%s&fields=%s&limit_start=%d&limit_page_length=%d",
+                erpnextApiUrl, filters, fields,  offset,size);
 
         System.out.println(url);
 
