@@ -22,6 +22,7 @@ public class AuthService {
         this.restTemplate = restTemplate;
     }
 
+    @SuppressWarnings("null")
     public LoginResponseDTO login(LoginRequestDTO loginRequest) {
         String loginUrl = erpnextApiUrl + "/api/method/login";
 
@@ -53,10 +54,10 @@ public class AuthService {
                 );
             }
         } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                return new LoginResponseDTO(false, "Invalid username or password");
-            }
-            return new LoginResponseDTO(false, "Login failed: " + e.getResponseBodyAsString());
+            // if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+            //     return new LoginResponseDTO(false, "Invalid username or password");
+            // }
+            return new LoginResponseDTO(false, "Login failed: " + e.getMessage());
         } catch (Exception e) {
             return new LoginResponseDTO(false, "An error occurred during login: " + e.getMessage());
         }
