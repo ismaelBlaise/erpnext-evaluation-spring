@@ -71,7 +71,7 @@ public class SupplierService {
             ResponseEntity<SupplierListResponse> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
-                request,
+                request, 
                 SupplierListResponse.class
             );
     

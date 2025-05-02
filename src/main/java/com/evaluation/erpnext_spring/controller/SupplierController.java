@@ -17,7 +17,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/suppliers")
 public class SupplierController {
-
+ 
     @Autowired
     private  SupplierService supplierService;
     
@@ -29,7 +29,7 @@ public class SupplierController {
         ModelAndView modelAndView = new ModelAndView("template");
         SupplierListResponse response =null;
         try {
-            modelAndView.addObject("page", "suppliers/list");
+            modelAndView.addObject("page", "suppliers>/list");
 
             
 
