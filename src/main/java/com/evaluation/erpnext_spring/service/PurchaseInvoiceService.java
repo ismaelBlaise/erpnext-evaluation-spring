@@ -83,7 +83,7 @@ public class PurchaseInvoiceService {
 
         if (status != null && !status.isEmpty()) {
             String filters = String.format("[[\"Purchase Invoice\",\"status\",\"=\",\"%s\"]]", status);
-            urlBuilder.append("&filters=").append(filters.replace("\"", "%22")); // encodage des guillemets
+            urlBuilder.append("&filters=").append(filters); // encodage des guillemets
         }
 
         String url = urlBuilder.toString();

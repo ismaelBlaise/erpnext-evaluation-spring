@@ -26,10 +26,14 @@ public class PurchaseInvoiceController {
                                             @RequestParam(defaultValue = "5") int size) {
         ModelAndView modelAndView = new ModelAndView("template");
         modelAndView.addObject("page", "invoices/list");
-
+        PurchaseInvoiceListResponse response=null;
         try {
-            PurchaseInvoiceListResponse response = purchaseInvoiceService.getPurchaseInvoices(session, page, size);
-
+            if(status == null || status.trim().isEmpty()){
+                response = purchaseInvoiceService.getPurchaseInvoices(session, page, size);
+            }
+            else {
+                response=purchaseInvoiceService.getPurchaseInvoicesByStatus(session, status);
+            }
             
             modelAndView.addObject("purchaseInvoices", response.getData());
             modelAndView.addObject("purchaseInvoiceStatus", PurchaseInvoiceStatus.values());
