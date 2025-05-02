@@ -45,6 +45,7 @@ public class SupplierController {
             modelAndView.addObject("suppliers", suppliers);
             modelAndView.addObject("currentPage", page);
             modelAndView.addObject("pageSize", size);
+            
 
         } catch (Exception e) {
             e.getMessage();
