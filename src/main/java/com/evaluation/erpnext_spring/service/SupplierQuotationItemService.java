@@ -1,8 +1,8 @@
 package com.evaluation.erpnext_spring.service;
 
-import com.evaluation.erpnext_spring.dto.SupplierQuotationItemListResponse;
-import com.evaluation.erpnext_spring.dto.UpdateItemRateResponseDTO;
-import com.evaluation.erpnext_spring.dto.UpdateItemRateResponseGroup;
+import com.evaluation.erpnext_spring.dto.quotations.SupplierQuotationItemListResponse;
+import com.evaluation.erpnext_spring.dto.quotations.UpdateItemRateResponseDTO;
+import com.evaluation.erpnext_spring.dto.quotations.UpdateItemRateResponseGroup;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

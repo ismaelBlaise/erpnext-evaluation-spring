@@ -1,7 +1,7 @@
 package com.evaluation.erpnext_spring.controller;
 
-import com.evaluation.erpnext_spring.dto.RequestForQuotationListResponse;
-import com.evaluation.erpnext_spring.dto.RequestForQuotationSupplierDTO;
+import com.evaluation.erpnext_spring.dto.quotations.RequestForQuotationListResponse;
+import com.evaluation.erpnext_spring.dto.quotations.RequestForQuotationSupplierDTO;
 import com.evaluation.erpnext_spring.service.RequestForQuotationService;
 import com.evaluation.erpnext_spring.service.RequestForQuotationSupplierService;
 import org.springframework.beans.factory.annotation.Autowired;

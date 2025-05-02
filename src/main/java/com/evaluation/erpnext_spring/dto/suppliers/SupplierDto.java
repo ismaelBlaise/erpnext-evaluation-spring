@@ -1,4 +1,4 @@
-package com.evaluation.erpnext_spring.dto;
+package com.evaluation.erpnext_spring.dto.suppliers;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

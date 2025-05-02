@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.evaluation.erpnext_spring.dto.SupplierListResponse;
+
+import com.evaluation.erpnext_spring.dto.suppliers.SupplierListResponse;
+
 import jakarta.servlet.http.HttpSession;
 import java.util.Collections;
 

@@ -1,12 +1,14 @@
 package com.evaluation.erpnext_spring.service;
 
-import com.evaluation.erpnext_spring.dto.RequestForQuotationListResponse;
-import com.evaluation.erpnext_spring.dto.RequestForQuotationSupplierDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.evaluation.erpnext_spring.dto.quotations.RequestForQuotationListResponse;
+import com.evaluation.erpnext_spring.dto.quotations.RequestForQuotationSupplierDTO;
+
 import jakarta.servlet.http.HttpSession;
 
 import java.util.Collections;

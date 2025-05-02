@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.evaluation.erpnext_spring.dto.SupplierDto;
-import com.evaluation.erpnext_spring.dto.SupplierListResponse;
+import com.evaluation.erpnext_spring.dto.suppliers.SupplierDto;
+import com.evaluation.erpnext_spring.dto.suppliers.SupplierListResponse;
 import com.evaluation.erpnext_spring.service.SupplierService;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;

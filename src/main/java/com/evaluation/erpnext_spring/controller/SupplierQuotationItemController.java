@@ -1,9 +1,9 @@
 package com.evaluation.erpnext_spring.controller;
 
-import com.evaluation.erpnext_spring.dto.SupplierQuotationItemDto;
-import com.evaluation.erpnext_spring.dto.SupplierQuotationGroupDto;
-import com.evaluation.erpnext_spring.dto.SupplierQuotationItemListResponse;
-import com.evaluation.erpnext_spring.dto.UpdateItemRateResponseDTO;
+import com.evaluation.erpnext_spring.dto.quotations.SupplierQuotationGroupDto;
+import com.evaluation.erpnext_spring.dto.quotations.SupplierQuotationItemDto;
+import com.evaluation.erpnext_spring.dto.quotations.SupplierQuotationItemListResponse;
+import com.evaluation.erpnext_spring.dto.quotations.UpdateItemRateResponseDTO;
 import com.evaluation.erpnext_spring.service.SupplierQuotationItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

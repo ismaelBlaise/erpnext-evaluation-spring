@@ -1,0 +1,60 @@
+package com.evaluation.erpnext_spring.service;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.evaluation.erpnext_spring.dto.payments.PaymentDTO;
+
+import jakarta.servlet.http.HttpSession;
+import java.util.Collections;
+
+@Service
+public class PaymentService {
+
+    @Value("${erpnext.api.url}")
+    private String erpnextApiUrl;
+
+    @Value("${erpnext.api.key}")
+    private String erpnextApiKey;
+
+    @Value("${erpnext.api.secret}")
+    private String erpnextApiSecret;
+
+    private final RestTemplate restTemplate;
+
+    public PaymentService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    public String processPayment(PaymentDTO paymentDTO) throws Exception {
+        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                .getRequest().getSession();
+        String sid = (String) session.getAttribute("sid");
+
+        if (sid == null) {
+            throw new RuntimeException("Session non authentifiée");
+        }
+
+        String url = erpnextApiUrl + "/api/resource/Payment Entry";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.set("Authorization", "token " + erpnextApiKey + ":" + erpnextApiSecret);
+        headers.set("Cookie", "sid=" + sid);
+
+        HttpEntity<PaymentDTO> request = new HttpEntity<>(paymentDTO, headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+        
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            throw new RuntimeException("Erreur ERPNext: " + response.getBody());
+        }
+        
+        return response.getBody();
+    }
+}

@@ -1,4 +1,4 @@
-package com.evaluation.erpnext_spring.dto;
+package com.evaluation.erpnext_spring.dto.auth;
 
 import lombok.Data;
 
