@@ -60,6 +60,7 @@ public class SupplierQuotationItemService {
 
 
 
+    @SuppressWarnings("null")
     public UpdateItemRateResponseDTO updateSupplierQuotationItemRate(HttpSession session, String itemName, double newRate) {
         String sid = (String) session.getAttribute("sid");
         if (sid == null || sid.isEmpty()) {
@@ -71,7 +72,7 @@ public class SupplierQuotationItemService {
         
         @SuppressWarnings("deprecation")
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl)
-                .queryParam("item_code", itemName)
+                .queryParam("item_name", itemName)
                 .queryParam("new_rate", newRate);
 
         HttpHeaders headers = new HttpHeaders();
