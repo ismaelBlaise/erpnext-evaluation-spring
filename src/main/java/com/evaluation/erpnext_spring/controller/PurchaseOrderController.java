@@ -1,6 +1,7 @@
 package com.evaluation.erpnext_spring.controller;
 
 import com.evaluation.erpnext_spring.dto.PurchaseOrderListResponse;
+import com.evaluation.erpnext_spring.enums.PurchaseOrderStatus;
 import com.evaluation.erpnext_spring.service.PurchaseOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,16 +21,23 @@ public class PurchaseOrderController {
 
     @GetMapping
     public ModelAndView getPurchaseOrders(HttpSession session,
+                                          @RequestParam(required = false) String status,
                                           @RequestParam String supplierId,
                                           @RequestParam(defaultValue = "0") int page,
                                           @RequestParam(defaultValue = "5") int size) {
         ModelAndView modelAndView = new ModelAndView("template");
         modelAndView.addObject("page", "orders/list");
-
+        PurchaseOrderListResponse response=null;
         try {
-            PurchaseOrderListResponse response = purchaseOrderService.getPurchaseOrdersBySupplier(session, supplierId, page, size);
+            if(status == null || status.trim().isEmpty()){
+                response = purchaseOrderService.getPurchaseOrdersBySupplier(session, supplierId, page, size);
+            }
+            else{
+                response= purchaseOrderService.getPurchaseOrdersBySupplierAndStatus(session,supplierId,status);
+            }
 
             modelAndView.addObject("purchaseOrders", response.getData());
+             modelAndView.addObject("purchaseStatus", PurchaseOrderStatus.values());
             modelAndView.addObject("currentPage", page);
             modelAndView.addObject("pageSize", size);
             modelAndView.addObject("supplier", supplierId);

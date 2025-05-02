@@ -60,4 +60,53 @@ public class PurchaseOrderService {
             throw new RuntimeException("Error while fetching purchase orders: " + e.getMessage(), e);
         }
     }
+
+
+    public PurchaseOrderListResponse getPurchaseOrdersBySupplierAndStatus(HttpSession session, String supplierId, String status) {
+        String sid = (String) session.getAttribute("sid");
+        if (sid == null || sid.isEmpty()) {
+            throw new RuntimeException("Session not authenticated");
+        }
+    
+        String fields = "[\"name\",\"creation\",\"modified\",\"supplier\",\"supplier_name\",\"order_confirmation_no\"," +
+                "\"total_qty\",\"base_total\",\"base_grand_total\",\"grand_total\",\"rounded_total\",\"status\",\"transaction_date\"]";
+    
+        // Construction du filtre avec le statut
+        String filters = String.format("[[\"supplier\", \"=\", \"%s\"]]", supplierId);
+    
+        // Si le statut est non null, on l'ajoute dans le filtre
+        if (status != null && !status.isEmpty()) {
+            filters = String.format("[[\"supplier\", \"=\", \"%s\"], [\"status\", \"=\", \"%s\"]]", supplierId, status);
+        }
+    
+        // URL sans pagination
+        String url = String.format("%s/api/resource/Purchase Order?filters=%s&fields=%s", 
+                                   erpnextApiUrl, filters, fields);
+    
+        System.out.println(url);
+    
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Cookie", "sid=" + sid);
+    
+        HttpEntity<String> request = new HttpEntity<>(headers);
+    
+        try {
+            ResponseEntity<PurchaseOrderListResponse> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    request,
+                    PurchaseOrderListResponse.class
+            );
+    
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                return response.getBody();
+            } else {
+                throw new RuntimeException("Failed to fetch purchase orders: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error while fetching purchase orders: " + e.getMessage(), e);
+        }
+    }
+    
 }
