@@ -1,16 +1,17 @@
 package com.evaluation.erpnext_spring.service;
 
-import com.evaluation.erpnext_spring.dto.SupplierQuotationResponse;
+import com.evaluation.erpnext_spring.dto.SupplierQuotationItemListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import jakarta.servlet.http.HttpSession;
+
 import java.util.Collections;
 
 @Service
-public class SupplierQuotationService {
+public class SupplierQuotationItemService {
 
     @Autowired
     private RestTemplate restTemplate;
@@ -18,13 +19,13 @@ public class SupplierQuotationService {
     @Value("${erpnext.api.url}")
     private String erpnextApiUrl;
 
-    public SupplierQuotationResponse getSupplierQuotation(HttpSession session, String quotationId) {
+    public SupplierQuotationItemListResponse getSupplierQuotation(HttpSession session, String quotationId) {
         String sid = (String) session.getAttribute("sid");
         if (sid == null || sid.isEmpty()) {
             throw new RuntimeException("Session not authenticated");
         }
 
-        // URL directe vers le document Supplier Quotation
+        
         String url = String.format("%s/api/resource/Supplier Quotation/%s", erpnextApiUrl, quotationId);
 
         HttpHeaders headers = new HttpHeaders();
@@ -34,11 +35,11 @@ public class SupplierQuotationService {
         HttpEntity<String> request = new HttpEntity<>(headers);
 
         try {
-            ResponseEntity<SupplierQuotationResponse> response = restTemplate.exchange(
+            ResponseEntity<SupplierQuotationItemListResponse> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
                     request,
-                    SupplierQuotationResponse.class
+                    SupplierQuotationItemListResponse.class
             );
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
