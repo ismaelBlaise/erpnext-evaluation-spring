@@ -43,9 +43,9 @@ public class SupplierQuotationItemService {
 
         String url = String.format("%s/api/resource/Supplier Quotation Item?filters=%s&fields=%s&limit_start=%d&limit_page_length=%d",
                 erpnextApiUrl, filters, fields, offset, size);
-
+        System.out.println();
         System.out.println(url);
-
+        System.out.println();
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("Cookie", "sid=" + sid);
