@@ -81,7 +81,7 @@ public class AuthService {
         
         for (String cookie : cookies) {
             if (cookie.contains("sid=")) {
-                // Extraire la valeur du sid
+                
                 String[] parts = cookie.split(";")[0].split("=");
                 if (parts.length > 1) {
                     return parts[1];
