@@ -1,6 +1,7 @@
 package com.evaluation.erpnext_spring.controller;
 
 import com.evaluation.erpnext_spring.dto.PurchaseInvoiceListResponse;
+import com.evaluation.erpnext_spring.enums.PurchaseInvoiceStatus;
 import com.evaluation.erpnext_spring.service.PurchaseInvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,7 @@ public class PurchaseInvoiceController {
 
     @GetMapping
     public ModelAndView getPurchaseInvoices(HttpSession session,
+                                            @RequestParam(required = false) String status,
                                             @RequestParam(defaultValue = "0") int page,
                                             @RequestParam(defaultValue = "5") int size) {
         ModelAndView modelAndView = new ModelAndView("template");
@@ -30,6 +32,7 @@ public class PurchaseInvoiceController {
 
             
             modelAndView.addObject("purchaseInvoices", response.getData());
+            modelAndView.addObject("purchaseInvoiceStatus", PurchaseInvoiceStatus.values());
             modelAndView.addObject("currentPage", page);
             modelAndView.addObject("pageSize", size);
 
