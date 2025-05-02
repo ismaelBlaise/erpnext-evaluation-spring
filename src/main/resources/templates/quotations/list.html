@@ -38,7 +38,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${quotation.status}"></td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a th:href="@{/quotations/details/{id}(id=${quotation.quotationNumber})}" class="text-blue-600 hover:text-blue-900">Voir détails</a>
+                            <a th:href="@{/quotation-items(parentId=${quotation.name})}" class="text-blue-600 hover:text-blue-900">Voir détails</a>
                         </td>
                     </tr>
                     

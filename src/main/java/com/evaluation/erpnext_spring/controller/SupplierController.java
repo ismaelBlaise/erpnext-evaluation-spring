@@ -17,7 +17,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/suppliers")
 public class SupplierController {
-
+ 
     @Autowired
     private  SupplierService supplierService;
     
@@ -45,6 +45,7 @@ public class SupplierController {
             modelAndView.addObject("suppliers", suppliers);
             modelAndView.addObject("currentPage", page);
             modelAndView.addObject("pageSize", size);
+            
 
         } catch (Exception e) {
             e.getMessage();
