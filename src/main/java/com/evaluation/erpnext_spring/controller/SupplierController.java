@@ -29,7 +29,7 @@ public class SupplierController {
         ModelAndView modelAndView = new ModelAndView("template");
         SupplierListResponse response =null;
         try {
-            modelAndView.addObject("page", "suppliers>/list");
+            modelAndView.addObject("page", "suppliers/list");
 
             
 

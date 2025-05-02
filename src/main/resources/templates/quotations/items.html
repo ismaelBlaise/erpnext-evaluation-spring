@@ -5,6 +5,13 @@
             <div class="mb-4 sm:mb-0">
                 <h1 class="text-2xl font-semibold text-gray-800">Détails du devis</h1>
                 <p class="text-sm text-gray-500 mt-1">Liste des articles pour le devis <b th:text="${parentId}"></b></p>
+                
+                <!-- Notice si devis validé -->
+                <th:block th:if="${quotationInfo.status == 'Submitted'}">
+                    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded mt-4">
+                        <p class="font-medium">⚠️ Ce devis a été validé et n’est plus modifiable.</p>
+                    </div>
+                </th:block>
             </div>
         </div>
     </div>
@@ -19,23 +26,36 @@
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code Article</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom Article</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entrepôt</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantité</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix Unitaire</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entrepôt</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    <!-- Boucle Thymeleaf pour lister les items -->
                     <tr th:each="item : ${quotationItems}" class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${item.itemCode}"></td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${item.itemName}"></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${item.warehouse}"></td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${item.qty}"></td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                            th:text="${#numbers.formatDecimal(item.rate, 1, 'COMMA', 2, 'POINT') + ' USD'}"></td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <form th:action="@{/quotation-items}" method="post" class="flex items-center space-x-2">
+                                <input type="hidden" name="itemCode" th:value="${item.itemCode}" />
+                                <input type="number" step="0.01" name="newRate" th:value="${item.rate}" class="border rounded px-2 py-1 w-24 text-sm" />
+                                <button type="button"
+                                        class="ml-2 text-blue-500 hover:text-blue-700 text-xs flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                        onclick="editRate(this)"
+                                        th:disabled="${quotationInfo.status == 'Submitted'}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                        <path fill-rule="evenodd" d="M5 15a1 1 0 011-1h9a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+                                    </svg>
+                                    Modifier
+                                </button>
+                            </form>
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900"
                             th:text="${#numbers.formatDecimal(item.amount, 1, 'COMMA', 2, 'POINT') + ' USD'}"></td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${item.warehouse}"></td>
                     </tr>
 
                     <!-- Aucun résultat -->
@@ -60,11 +80,9 @@
                         </svg>
                         Précédent
                     </a>
-                    
                     <span class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-gray-100 rounded-md">
                         Page <span th:text="${currentPage + 1}" class="ml-1 font-semibold"></span>
                     </span>
-
                     <a th:href="@{/quotation-items(parentId=${parentId}, page=${currentPage + 1}, size=${pageSize})}"
                        class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                         Suivant
@@ -77,3 +95,16 @@
         </div>
     </div>
 </div>
+
+<script>
+    function editRate(button) {
+        if (button.disabled) {
+            return;
+        }
+
+        const form = button.closest('form');
+        if (form) {
+            form.submit();
+        }
+    }
+</script>

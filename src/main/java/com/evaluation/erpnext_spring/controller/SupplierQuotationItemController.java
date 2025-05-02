@@ -24,14 +24,14 @@ public class SupplierQuotationItemController {
 
     @GetMapping
     public ModelAndView getSupplierQuotationItems(HttpSession session,
-                                                  @RequestParam String quotationId,
+                                                  @RequestParam String parentId,
                                                   @RequestParam(defaultValue = "0") int page,
                                                   @RequestParam(defaultValue = "5") int size) {
         ModelAndView modelAndView = new ModelAndView("template");
         modelAndView.addObject("page", "quotations/items");
 
         try {
-            SupplierQuotationItemListResponse response = supplierQuotationService.getSupplierQuotation(session, quotationId);
+            SupplierQuotationItemListResponse response = supplierQuotationService.getSupplierQuotation(session, parentId);
 
             
             SupplierQuotationGroupDto quotationGroup = response.getData();
@@ -42,7 +42,7 @@ public class SupplierQuotationItemController {
             modelAndView.addObject("quotationInfo", quotationGroup);
             modelAndView.addObject("currentPage", page);
             modelAndView.addObject("pageSize", size);
-            modelAndView.addObject("quotationId", quotationId);
+            modelAndView.addObject("parentId", parentId);
 
         } catch (Exception e) {
             e.printStackTrace();
