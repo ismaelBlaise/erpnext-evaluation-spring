@@ -1,119 +1,108 @@
 <div class="max-w-4xl mx-auto mt-6">
-    <!-- En-tête avec boutons d'action -->
+    <!-- Ajout de th:object="${paymentDTO}" -->
+    <form id="paymentForm" th:action="@{/payments/process}" method="post" th:object="${paymentDTO}">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold text-gray-800">Paiement de Facture d'Achat</h1>
+        <h1 class="text-2xl font-semibold text-gray-800">Paiement de Facture d'Achat: <span th:text="${invoice.name}"></span></h1>
         <div class="flex space-x-3">
-            <button type="button" class="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-md shadow-sm text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                Annuler
-            </button>
+            <a href="invoices">
+                <button type="button" class="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-md shadow-sm text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Annuler
+                </button>
+            </a>
             <button type="submit" form="paymentForm" class="px-4 py-2 border border-transparent bg-blue-600 text-white rounded-md shadow-sm text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 Enregistrer
             </button>
         </div>
     </div>
 
-    <!-- Contenu principal -->
-    <form id="paymentForm" action="/api/payments/make" method="post">
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-            <!-- Section supérieure -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 border-b border-gray-200">
-                <!-- Colonne gauche -->
-                <div class="space-y-5">
-                    <div>
-                        <label for="paymentType" class="block text-sm font-medium text-gray-700 mb-2">Type de paiement</label>
-                        <select id="paymentType" name="paymentType" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
-                            <option value="Pay">Payer</option>
-                            <option value="Receive">Recevoir</option>
-                            <option value="Internal Transfer">Transfert interne</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label for="postingDate" class="block text-sm font-medium text-gray-700 mb-2">Date de comptabilisation</label>
-                        <input type="date" id="postingDate" name="postingDate" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
-                    </div>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 border-b border-gray-200">
+            <div class="space-y-5">
+                <div>
+                    <label for="paymentType" class="block text-sm font-medium text-gray-700 mb-2">Type de paiement</label>
+                    <!-- Remplacement de name par th:field -->
+                    <select id="paymentType" th:field="*{paymentType}" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        <option value="Pay">Payer</option>
+                        <option value="Receive">Recevoir</option>
+                        <option value="Internal Transfer">Transfert interne</option>
+                    </select>
                 </div>
-
-                <!-- Colonne droite -->
-                <div class="space-y-5">
-                    <div>
-                        <label for="company" class="block text-sm font-medium text-gray-700 mb-2">Société</label>
-                        <select id="company" name="company" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
-                            <option value="">Sélectionner une société</option>
-                            <!-- Options dynamiques ici -->
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label for="paidAmount" class="block text-sm font-medium text-gray-700 mb-2">Montant payé</label>
-                        <div class="mt-1 relative rounded-lg shadow-sm">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-500">$</span>
-                            </div>
-                            <input type="number" step="0.01" id="paidAmount" name="paidAmount" 
-                                   class="block w-full pl-8 pr-12 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm"
-                                   placeholder="0.00">
-                        </div>
-                    </div>
+                
+                <div>
+                    <label for="postingDate" class="block text-sm font-medium text-gray-700 mb-2">Date de comptabilisation</label>
+                    <!-- Remplacement de name par th:field -->
+                    <input type="date" id="postingDate" th:field="*{postingDate}" 
+                           th:value="${invoice.postingDate}" 
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
                 </div>
             </div>
 
-            <!-- Section des références -->
-            <div class="p-6 border-b border-gray-200">
-                <h3 class="text-lg font-medium text-gray-800 mb-4">Références</h3>
-                <div class="overflow-hidden border border-gray-200 rounded-lg shadow-xs">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Référence</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dû</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alloué</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <select class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
-                                        <option>Facture d'achat</option>
-                                        
-                                    </select>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <input type="text" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-15</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1,200.00 $</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="relative rounded-md shadow-sm">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <span class="text-gray-500 text-sm">$</span>
-                                        </div>
-                                        <input type="number" step="0.01" class="block w-full pl-8 pr-12 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="space-y-5">
+                <div>
+                    <label for="company" class="block text-sm font-medium text-gray-700 mb-2">Société</label>
+                    <!-- Remplacement de name par th:field -->
+                    <select id="company" th:field="*{company}" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                        <option th:value="${invoice.company}" th:text="${invoice.company}" selected></option>
+                    </select>
                 </div>
-            </div>
-
-            <!-- Section inférieure -->
-            <div class="p-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="referenceNo" class="block text-sm font-medium text-gray-700 mb-2">Référence n°</label>
-                        <input type="text" id="referenceNo" name="referenceNo" 
-                               class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                
+                <div>
+                    <label for="paidAmount" class="block text-sm font-medium text-gray-700 mb-2">Montant payé</label>
+                    <div class="mt-1 relative rounded-lg shadow-sm">
+                        <!-- Remplacement de name par th:field -->
+                        <input type="number" step="0.01" id="paidAmount" th:field="*{paidAmount}" 
+                               th:max="${invoice.outstandingAmount}"
+                               class="block w-full pl-8 pr-12 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
                     </div>
-                    <div>
-                        <label for="referenceDate" class="block text-sm font-medium text-gray-700 mb-2">Date de référence</label>
-                        <input type="date" id="referenceDate" name="referenceDate" 
-                               class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
-                    </div>
+                    <p class="mt-1 text-sm text-gray-500">Montant restant: <span th:text="${invoice.outstandingAmount}"></span> <span th:text="${invoice.currency}"></span></p>
                 </div>
             </div>
         </div>
+
+        <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-800 mb-4">Références</h3>
+            <div class="overflow-hidden border border-gray-200 rounded-lg shadow-xs">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Référence</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dû (USD)</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alloué (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="block w-full px-3 py-2 text-sm">Facture d'achat</span>
+                                <!-- Champ caché pour invoiceType -->
+                                <input type="hidden" th:field="*{invoiceType}" value="Purchase Invoice">
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="block w-full px-3 py-2 text-sm" th:text="${invoice.name}"></span>
+                                <!-- Champ caché pour invoiceName -->
+                                <input type="hidden" th:field="*{invoiceName}" th:value="${invoice.name}">
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${invoice.postingDate}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${invoice.outstandingAmount + ' ' + invoice.currency}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="relative rounded-md shadow-sm">
+                                    <!-- Remplacement de name par th:field -->
+                                    <input type="number" step="0.01" th:field="*{allocatedAmount}"
+                                           th:max="${invoice.outstandingAmount}"
+                                           class="block w-full pl-8 pr-12 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    
+    <input type="hidden" th:field="*{party}" th:value="${invoice.supplier}">
+    <input type="hidden" th:field="*{currency}" th:value="${invoice.currency}">
     </form>
 </div>

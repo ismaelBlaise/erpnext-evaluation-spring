@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.evaluation.erpnext_spring.dto.invoices.PurchaseInvoice;
 import com.evaluation.erpnext_spring.dto.invoices.PurchaseInvoiceListResponse;
+import com.evaluation.erpnext_spring.dto.invoices.PurchaseInvoiceResponse;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.Collections;
@@ -113,6 +116,44 @@ public class PurchaseInvoiceService {
             }
         } catch (Exception e) {
             throw new RuntimeException("Error while fetching purchase invoices: " + e.getMessage(), e);
+        }
+    }
+
+
+    @SuppressWarnings("null")
+    public PurchaseInvoice getPurchaseInvoiceByName(HttpSession session, String invoiceName) {
+        String sid = (String) session.getAttribute("sid");
+        if (sid == null || sid.isEmpty()) {
+            throw new RuntimeException("Session not authenticated");
+        }
+
+        String url = String.format("%s/api/resource/Purchase Invoice/%s", 
+                erpnextApiUrl, invoiceName);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Cookie", "sid=" + sid);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<PurchaseInvoiceResponse> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    request,
+                    PurchaseInvoiceResponse.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                return response.getBody().getData();
+            } else {
+                throw new RuntimeException("Failed to fetch purchase invoice. Status: " + 
+                    response.getStatusCode() + ", Response: " + response.getBody());
+            }
+        } catch (HttpClientErrorException e) {
+            throw new RuntimeException("ERPNext API error: " + e.getResponseBodyAsString(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error while fetching purchase invoice: " + e.getMessage(), e);
         }
     }
 }
