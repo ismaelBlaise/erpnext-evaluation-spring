@@ -22,14 +22,14 @@ public class RequestForQuotationService {
     @Value("${erpnext.api.url}")
     private String erpnextApiUrl;
 
-    public RequestForQuotationListResponse getQuotationsBySuppliers(HttpSession session, List<RequestForQuotationSupplierDTO> supplierDTOList) {
+    public RequestForQuotationListResponse getQuotationsBySuppliers(HttpSession session, List<RequestForQuotationSupplierDTO> supplierDTOList, int page, int size) {
         String sid = (String) session.getAttribute("sid");
         if (sid == null || sid.isEmpty()) {
             throw new RuntimeException("Session not authenticated");
         }
 
         if (supplierDTOList == null || supplierDTOList.isEmpty()) {
-            return new RequestForQuotationListResponse();  
+            return new RequestForQuotationListResponse();
         }
 
         List<String> parentIds = supplierDTOList.stream()
@@ -37,7 +37,6 @@ public class RequestForQuotationService {
                 .distinct()
                 .collect(Collectors.toList());
 
-         
         StringBuilder filterBuilder = new StringBuilder("[[\"name\",\"in\",[");
         for (int i = 0; i < parentIds.size(); i++) {
             filterBuilder.append("\"").append(parentIds.get(i)).append("\"");
@@ -47,10 +46,12 @@ public class RequestForQuotationService {
 
         String fields = "[\"name\",\"creation\",\"modified\",\"supplier\",\"supplier_name\",\"transaction_date\",\"status\",\"message_for_supplier\",\"incoterm\",\"total\"]";
 
-        String url = String.format("%s/api/resource/Request for Quotation?filters=%s&fields=%s", 
-                erpnextApiUrl, filterBuilder.toString(), fields);
+        int limitStart = page * size;
 
-        System.out.println(url);
+        String url = String.format("%s/api/resource/Request for Quotation?filters=%s&fields=%s&limit_start=%d&limit_page_length=%d",
+                erpnextApiUrl, filterBuilder.toString(), fields, limitStart, size);
+
+        System.out.println( url);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -59,7 +60,6 @@ public class RequestForQuotationService {
         HttpEntity<String> request = new HttpEntity<>(headers);
 
         try {
-            
             ResponseEntity<RequestForQuotationListResponse> response = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
