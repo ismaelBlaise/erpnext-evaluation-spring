@@ -9,6 +9,12 @@ import java.math.BigDecimal;
 public class PaymentDTO {
     @JsonProperty("payment_type")
     private String paymentType;
+
+    @JsonProperty("reference_doctype")
+    private String referenceDoctype = "Purchase Invoice";   
+    
+    @JsonProperty("reference_name")
+    private String referenceName;
     
     @JsonProperty("posting_date")
     private String postingDate;

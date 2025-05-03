@@ -3,6 +3,7 @@ package com.evaluation.erpnext_spring.controller;
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.pulsar.PulsarProperties.Transaction;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -69,6 +70,10 @@ public class PaymentController {
         
         try {
              
+            if(paymentDTO.getReferenceNo().isBlank() || paymentDTO.getReferenceDate().isBlank()){
+                throw new IllegalArgumentException("Le N° de Référence et la Date de Référence sont nécessaires pour une Transaction Bancaire");
+                
+            }
             if (paymentDTO.getPaidAmount() == null || paymentDTO.getPaidAmount().compareTo(BigDecimal.ZERO) <= 0) {
                 throw new IllegalArgumentException("Le montant payé doit être supérieur à zéro");
             }
@@ -80,7 +85,7 @@ public class PaymentController {
             //     paymentDTO.setPaidAmount(null);
             // }
             System.out.println();
-            System.out.println(paymentDTO.getInvoiceName());
+            System.out.println(paymentDTO.getReferenceNo());
             System.out.println();
             String paymentResult = paymentService.processPayment(paymentDTO);
             if (paymentDTO.getPaidAmount() == null || paymentDTO.getPaidAmount().compareTo(BigDecimal.ZERO) <= 0) {

@@ -1,5 +1,7 @@
 <div class="max-w-4xl mx-auto mt-6">
     <form id="paymentForm" th:action="@{/payments/process}" method="post" th:object="${paymentDTO}">
+        <input type="hidden" th:field="*{invoiceName}" th:value="${invoice.name}">
+        <input type="hidden" th:field="*{referenceName}" th:value="${invoice.name}">
         <!-- En-tête avec boutons -->
         <div class="flex justify-between items-center mb-6">
             <div>
@@ -171,9 +173,7 @@
                             <label for="paidFrom" class="block text-sm font-medium text-gray-700 mb-1">Compte Payé Du</label>
                             <select id="paidFrom" th:field="*{paidFrom}"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                                
                                 <option value="Bank Account - ED" selected>Bank Account - ED</option>
-                                <!-- <option th:each="account : ${accountsFrom}" th:value="${account.id}" th:text="${account.name}"></option> -->
                             </select>
                         </div>
                         
@@ -182,7 +182,6 @@
                             <select id="paidFromAccountCurrency" th:field="*{paidFromAccountCurrency}"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                                 <option value="USD" selected>USD</option>
-                                <!-- <option th:each="currency : ${currenciesFrom}" th:value="${currency}" th:text="${currency}"></option> -->
                             </select>
                         </div>
                     </div>
@@ -192,9 +191,7 @@
                             <label for="paidTo" class="block text-sm font-medium text-gray-700 mb-1">Compte Payé Au</label>
                             <select id="paidTo" th:field="*{paidTo}"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                                
                                 <option value="Creditors - ED" selected>Creditors - ED</option>
-                                <!-- <option th:each="account : ${accountsTo}" th:value="${account.id}" th:text="${account.name}"></option> -->
                             </select>
                         </div>
                         
@@ -203,14 +200,32 @@
                             <select id="paidToAccountCurrency" th:field="*{paidToAccountCurrency}"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                                 <option value="USD" selected>USD</option>
-                                <!-- <option th:each="currency : ${currenciesTo}" th:value="${currency}" th:text="${currency}"></option> -->
                             </select>
                         </div>
                     </div>
                 </div>
+                <br>
+                <hr>
+                <br>
+                <h3 class="text-lg font-medium text-gray-800 mb-4">Identifiant de Transaction</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="referenceNo" class="block text-sm font-medium text-gray-700 mb-1">Chèque/N° de Référence</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <input type="text" id="referenceNo" th:field="*{referenceNo}" 
+                                   class="block w-full pl-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="referenceDate" class="block text-sm font-medium text-gray-700 mb-1">Chèque/Date de Référence</label>
+                        <input type="date" id="referenceDate" th:field="*{referenceDate}" th:value="*{postingDate}"
+                               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                    </div>
+                </div>
             </div>
         </div>
-
+       
         <!-- Champs cachés -->
         <input type="hidden" th:field="*{party}" th:value="${invoice.supplier}">
         <input type="hidden" th:field="*{currency}" th:value="${invoice.currency}">

@@ -60,9 +60,9 @@ public class PaymentService {
 
         } catch (HttpClientErrorException e) {
              
-            throw new RuntimeException("Erreur côté client (4xx): " + e.getStatusCode() + " - " + e.getResponseBodyAsString(), e);
+            throw new RuntimeException("Erreur côté client (4xx): " + e.getStatusCode() + " - " + e.getMessage(), e);
         } catch (HttpServerErrorException e) {
-            throw new RuntimeException("Erreur côté serveur ERPNext (5xx): " + e.getStatusCode() + " - " + e.getResponseBodyAsString(), e);
+            throw new RuntimeException("Erreur côté serveur ERPNext (5xx): " + e.getStatusCode() + " - " + e.getMessage(), e);
         } catch (ResourceAccessException e) {
             throw new RuntimeException("Erreur d’accès au serveur ERPNext: " + e.getMessage(), e);
         } catch (RestClientException e) {
