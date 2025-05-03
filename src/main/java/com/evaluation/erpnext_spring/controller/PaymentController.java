@@ -77,7 +77,8 @@ public class PaymentController {
             
             paymentDTO.setReceivedAmount(paymentDTO.getPaidAmount());
             paymentDTO.setSourceExchangeRate(BigDecimal.valueOf(1.0));
-            
+            paymentDTO.setAllocatedAmount(paymentDTO.getPaidAmount());
+            paymentDTO.setDifferenceAmount(BigDecimal.ZERO);
             // Créer le paiement mais ne pas le soumettre encore
             PaymentResponseGroupDTO paymentResult = paymentService.processPayment(paymentDTO);
             
@@ -104,13 +105,16 @@ public class PaymentController {
         modelAndView.addObject("page", "invoices/payment_submit");
         modelAndView.addObject("invoice", invoice);
         modelAndView.addObject("paymentDTO", paymentDTO);
+        session.setAttribute("paymentDTO", paymentDTO);
         return modelAndView;
     }
 
     @PostMapping("/submit")
     public String submitPayment(
             @RequestParam String paymentName,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            HttpSession session
+            ) {
         
         try {
             String paymentSubmitResponse = paymentService.submitPaymentEntry(paymentName);

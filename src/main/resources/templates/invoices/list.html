@@ -55,7 +55,7 @@
                             <span th:if="${invoice.status == 'Draft'}" class="text-gray-500">Brouillon</span>
                             <span th:if="${invoice.status == 'Cancelled'}" class="text-gray-500">Annulé</span>
                             
-                            <a th:if="${invoice.status == 'Unpaid' or invoice.status == 'Overdue'}" 
+                            <a th:if="${invoice.status == 'Unpaid' or invoice.status == 'Overdue' or invoice.status == 'Partly Paid'}" 
                                th:href="@{/payments(facture=${invoice.name})}" 
                                class="text-blue-600 hover:text-blue-900">Payer</a>
                             
@@ -63,7 +63,8 @@
                                           and invoice.status != 'Draft' 
                                           and invoice.status != 'Cancelled' 
                                           and invoice.status != 'Unpaid' 
-                                          and invoice.status != 'Overdue'}" 
+                                          and invoice.status != 'Overdue'
+                                          and invoice.status != 'Partly Paid'}" 
                                   class="text-gray-500">Fermé</span>
                         </td>
                         
