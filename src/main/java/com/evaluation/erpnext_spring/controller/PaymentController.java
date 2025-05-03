@@ -27,7 +27,6 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/payments")
 public class PaymentController {
 
-    
     @Autowired
     private PaymentService paymentService;
     
@@ -40,7 +39,6 @@ public class PaymentController {
         
         try {
             PurchaseInvoice invoice = purchaseInvoiceService.getPurchaseInvoiceByName(session, facture);
-            
             
             PaymentDTO paymentDTO = new PaymentDTO();
             paymentDTO.setInvoiceName(invoice.getName());
@@ -63,8 +61,6 @@ public class PaymentController {
         return modelAndView;
     }
 
-
-
     @PostMapping("/process")
     public String processPayment(
             @ModelAttribute PaymentDTO paymentDTO,
@@ -72,45 +68,59 @@ public class PaymentController {
             RedirectAttributes redirectAttributes) {
         
         try {
-             
             if(paymentDTO.getReferenceNo().isBlank() || paymentDTO.getReferenceDate().isBlank()){
                 throw new IllegalArgumentException("Le N° de Référence et la Date de Référence sont nécessaires pour une Transaction Bancaire");
-                
             }
             if (paymentDTO.getPaidAmount() == null || paymentDTO.getPaidAmount().compareTo(BigDecimal.ZERO) <= 0) {
                 throw new IllegalArgumentException("Le montant payé doit être supérieur à zéro");
             }
+            
             paymentDTO.setReceivedAmount(paymentDTO.getPaidAmount());
             paymentDTO.setSourceExchangeRate(BigDecimal.valueOf(1.0));
             
-            // if ("Receive".equals(paymentDTO.getPaymentType())) {
-                
-            //     paymentDTO.setPaidAmount(null);
-            // }
-            System.out.println();
-            System.out.println(paymentDTO.getReferenceNo());
-            System.out.println();
+            // Créer le paiement mais ne pas le soumettre encore
             PaymentResponseGroupDTO paymentResult = paymentService.processPayment(paymentDTO);
-            String paymentSubmitResponse=paymentService.submitPaymentEntry(paymentResult.getData().getName());
-            if (paymentDTO.getPaidAmount() == null || paymentDTO.getPaidAmount().compareTo(BigDecimal.ZERO) <= 0) {
-                throw new IllegalArgumentException("Le montant payé doit être supérieur à zéro");
-            }
             
-            redirectAttributes.addFlashAttribute("success","paiement valider avec succes");
-            return "redirect:/payments/success?invoice=" + paymentDTO.getInvoiceName();
+            redirectAttributes.addFlashAttribute("paymentName", paymentResult.getData().getName());
+            redirectAttributes.addFlashAttribute("paymentDTO", paymentDTO);
+            return "redirect:/payments/submit?invoice=" + paymentDTO.getInvoiceName();
             
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/payments?facture=" + paymentDTO.getInvoiceName();
-            
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Erreur lors du traitement du paiement: " + e.getMessage());
             return "redirect:/payments?facture=" + paymentDTO.getInvoiceName();
         }
     }
 
+    @GetMapping("/submit")
+    public ModelAndView submitPaymentForm(
+            @RequestParam String invoice,
+            @ModelAttribute("paymentDTO") PaymentDTO paymentDTO,
+            HttpSession session) {
+        
+        ModelAndView modelAndView = new ModelAndView("template");
+        modelAndView.addObject("page", "invoices/payment_submit");
+        modelAndView.addObject("invoice", invoice);
+        modelAndView.addObject("paymentDTO", paymentDTO);
+        return modelAndView;
+    }
 
-    
+    @PostMapping("/submit")
+    public String submitPayment(
+            @RequestParam String paymentName,
+            RedirectAttributes redirectAttributes) {
+        
+        try {
+            String paymentSubmitResponse = paymentService.submitPaymentEntry(paymentName);
+            redirectAttributes.addFlashAttribute("success", "Paiement validé avec succès");
+            return "redirect:/payments/success?invoice=" + paymentName;
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Erreur lors de la soumission du paiement: " + e.getMessage());
+            return "redirect:/payments/submit?invoice=" + paymentName;
+        }
+    }
 
     @GetMapping("/success")
     public ModelAndView paymentSuccess(@RequestParam String invoice) {
