@@ -1,5 +1,6 @@
 <div class="max-w-4xl mx-auto mt-6">
     <form id="paymentForm" th:action="@{/payments/process}" method="post" th:object="${paymentDTO}">
+        <input type="hidden" th:field="*{outstandingAmount}" th:value="${invoice.outstandingAmount}">
         <input type="hidden" th:field="*{invoiceName}" th:value="${invoice.name}">
         <input type="hidden" name="references[0].referenceName" th:value="${invoice.name}">
         <input type="hidden" name="references[0].referenceDoctype" value="Purchase Invoice">
@@ -153,7 +154,7 @@
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <span class="text-gray-500 sm:text-sm">$</span>
                                         </div>
-                                        <input type="number" step="0.01" th:field="*{allocatedAmount}"
+                                        <input type="number" id="allocateAmountInput" step="0.01" th:field="*{allocatedAmount}"
                                                th:max="${invoice.outstandingAmount}"
                                                class="block w-full pl-7 pr-12 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -242,4 +243,19 @@
     function closeMessage(messageId) {
         document.getElementById(messageId).style.display = 'none';
     }
+
+    const paidAmount = document.getElementById("paidAmount");
+    const allocateAmountInput = document.getElementById("allocateAmountInput");
+
+    // Mettre la valeur initiale au chargement de la page
+    window.addEventListener("DOMContentLoaded", () => {
+        if (paidAmount && allocateAmountInput) {
+            allocateAmountInput.value = paidAmount.value;
+        }
+    });
+
+    // Mettre à jour la valeur si l'utilisateur modifie paidAmount
+    paidAmount.addEventListener("input", (e) => {
+        allocateAmountInput.value = e.target.value;
+    });
 </script>

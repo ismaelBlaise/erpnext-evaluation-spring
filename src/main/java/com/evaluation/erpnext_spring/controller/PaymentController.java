@@ -79,7 +79,11 @@ public class PaymentController {
             paymentDTO.setSourceExchangeRate(BigDecimal.valueOf(1.0));
             paymentDTO.setAllocatedAmount(paymentDTO.getPaidAmount());
             paymentDTO.setDifferenceAmount(BigDecimal.ZERO);
-            // Créer le paiement mais ne pas le soumettre encore
+            PaymentDTO.afficherPaymentDTO(paymentDTO);
+            if(paymentDTO.getReferences().size()<=0){
+                throw new IllegalArgumentException("Le montant reference doit être definis");
+            }
+            paymentDTO.getReferences().get(0).setAllocatedAmount(paymentDTO.getPaidAmount());
             PaymentResponseGroupDTO paymentResult = paymentService.processPayment(paymentDTO);
             
             redirectAttributes.addFlashAttribute("paymentName", paymentResult.getData().getName());
