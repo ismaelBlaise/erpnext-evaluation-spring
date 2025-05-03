@@ -4,17 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class PaymentDTO {
     @JsonProperty("payment_type")
     private String paymentType;
-
-    @JsonProperty("reference_doctype")
-    private String referenceDoctype = "Purchase Invoice";   
-    
-    @JsonProperty("reference_name")
-    private String referenceName;
     
     @JsonProperty("posting_date")
     private String postingDate;
@@ -68,8 +63,9 @@ public class PaymentDTO {
     private String paidTo;
     
     @JsonProperty("paid_to_account_currency")
-    private String paidToAccountCurrency = "USD"; // valeur par défaut
+    private String paidToAccountCurrency = "USD"; 
     
-    
+    @JsonProperty("references")
+    private List<PaymentReferenceDTO> references;
     
 }

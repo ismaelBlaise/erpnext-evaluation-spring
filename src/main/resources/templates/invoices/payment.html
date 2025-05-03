@@ -1,7 +1,10 @@
 <div class="max-w-4xl mx-auto mt-6">
     <form id="paymentForm" th:action="@{/payments/process}" method="post" th:object="${paymentDTO}">
         <input type="hidden" th:field="*{invoiceName}" th:value="${invoice.name}">
-        <input type="hidden" th:field="*{referenceName}" th:value="${invoice.name}">
+        <!-- <input type="hidden" name="references[0].referenceName" th:value="${invoice.name}">
+        <input type="hidden" name="references[0].referenceDoctype" value="Purchase Invoice">
+        <input type="hidden" name="references[0].allocatedAmount" th:value="${invoice.outstandingAmount}"> -->
+
         <!-- En-tête avec boutons -->
         <div class="flex justify-between items-center mb-6">
             <div>

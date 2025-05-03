@@ -92,7 +92,7 @@ public class PaymentController {
                 throw new IllegalArgumentException("Le montant payé doit être supérieur à zéro");
             }
              
-            redirectAttributes.addFlashAttribute("success", "Paiement enregistré avec succès");
+            redirectAttributes.addFlashAttribute("success", paymentResult);
             return "redirect:/payments/success?invoice=" + paymentDTO.getInvoiceName();
             
         } catch (IllegalArgumentException e) {
