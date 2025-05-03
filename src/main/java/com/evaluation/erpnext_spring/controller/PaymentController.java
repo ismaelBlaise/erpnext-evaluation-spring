@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.evaluation.erpnext_spring.dto.invoices.PurchaseInvoice;
 import com.evaluation.erpnext_spring.dto.payments.PaymentDTO;
+import com.evaluation.erpnext_spring.dto.payments.PaymentResponseDTO;
 import com.evaluation.erpnext_spring.service.PaymentService;
 import com.evaluation.erpnext_spring.service.PurchaseInvoiceService;
 
@@ -87,12 +88,13 @@ public class PaymentController {
             System.out.println();
             System.out.println(paymentDTO.getReferenceNo());
             System.out.println();
-            String paymentResult = paymentService.processPayment(paymentDTO);
+            PaymentResponseDTO paymentResult = paymentService.processPayment(paymentDTO);
+            String paymentSubmitResponse=paymentService.submitPaymentEntry(paymentResult.getName());
             if (paymentDTO.getPaidAmount() == null || paymentDTO.getPaidAmount().compareTo(BigDecimal.ZERO) <= 0) {
                 throw new IllegalArgumentException("Le montant payé doit être supérieur à zéro");
             }
              
-            redirectAttributes.addFlashAttribute("success", paymentResult);
+            redirectAttributes.addFlashAttribute("success", paymentSubmitResponse);
             return "redirect:/payments/success?invoice=" + paymentDTO.getInvoiceName();
             
         } catch (IllegalArgumentException e) {
