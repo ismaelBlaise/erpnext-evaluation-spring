@@ -165,8 +165,28 @@
                         </tbody>
                     </table>
                 </div>
+                <br>
+                <hr>
+                <br>
+                <h3 class="text-lg font-medium text-gray-800 mb-4">Identifiant de Transaction</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="referenceNo" class="block text-sm font-medium text-gray-700 mb-1">Chèque/N° de Référence</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <input type="text" id="referenceNo" th:field="*{referenceNo}" 
+                                   class="block w-full pl-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="referenceDate" class="block text-sm font-medium text-gray-700 mb-1">Chèque/Date de Référence</label>
+                        <input type="date" id="referenceDate" th:field="*{referenceDate}" th:value="${invoice.postingDate}" 
+                               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                    </div>
+                </div>
             </div>
 
+            
             <!-- Section Comptes -->
             <div class="p-6">
                 <h3 class="text-lg font-medium text-gray-800 mb-4">Comptes bancaires</h3>
@@ -207,25 +227,7 @@
                         </div>
                     </div>
                 </div>
-                <br>
-                <hr>
-                <br>
-                <h3 class="text-lg font-medium text-gray-800 mb-4">Identifiant de Transaction</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="referenceNo" class="block text-sm font-medium text-gray-700 mb-1">Chèque/N° de Référence</label>
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <input type="text" id="referenceNo" th:field="*{referenceNo}" 
-                                   class="block w-full pl-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label for="referenceDate" class="block text-sm font-medium text-gray-700 mb-1">Chèque/Date de Référence</label>
-                        <input type="date" id="referenceDate" th:field="*{referenceDate}" th:value="*{postingDate}"
-                               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                    </div>
-                </div>
+                
             </div>
         </div>
        

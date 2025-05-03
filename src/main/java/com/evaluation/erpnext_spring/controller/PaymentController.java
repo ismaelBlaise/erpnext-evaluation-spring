@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.evaluation.erpnext_spring.dto.invoices.PurchaseInvoice;
 import com.evaluation.erpnext_spring.dto.payments.PaymentDTO;
 import com.evaluation.erpnext_spring.dto.payments.PaymentResponseDTO;
+import com.evaluation.erpnext_spring.dto.payments.PaymentResponseGroupDTO;
 import com.evaluation.erpnext_spring.service.PaymentService;
 import com.evaluation.erpnext_spring.service.PurchaseInvoiceService;
 
@@ -51,6 +52,7 @@ public class PaymentController {
             
             modelAndView.addObject("page", "invoices/payment");
             modelAndView.addObject("invoice", invoice);
+            modelAndView.addObject("date",invoice.getPostingDate());
             modelAndView.addObject("paymentDTO", paymentDTO); 
             
         } catch (Exception e) {
@@ -88,13 +90,13 @@ public class PaymentController {
             System.out.println();
             System.out.println(paymentDTO.getReferenceNo());
             System.out.println();
-            PaymentResponseDTO paymentResult = paymentService.processPayment(paymentDTO);
-            String paymentSubmitResponse=paymentService.submitPaymentEntry(paymentResult.getName());
+            PaymentResponseGroupDTO paymentResult = paymentService.processPayment(paymentDTO);
+            String paymentSubmitResponse=paymentService.submitPaymentEntry(paymentResult.getData().getName());
             if (paymentDTO.getPaidAmount() == null || paymentDTO.getPaidAmount().compareTo(BigDecimal.ZERO) <= 0) {
                 throw new IllegalArgumentException("Le montant payé doit être supérieur à zéro");
             }
-             
-            redirectAttributes.addFlashAttribute("success", paymentSubmitResponse);
+            
+            redirectAttributes.addFlashAttribute("success","paiement valider avec succes");
             return "redirect:/payments/success?invoice=" + paymentDTO.getInvoiceName();
             
         } catch (IllegalArgumentException e) {
@@ -106,6 +108,9 @@ public class PaymentController {
             return "redirect:/payments?facture=" + paymentDTO.getInvoiceName();
         }
     }
+
+
+    
 
     @GetMapping("/success")
     public ModelAndView paymentSuccess(@RequestParam String invoice) {

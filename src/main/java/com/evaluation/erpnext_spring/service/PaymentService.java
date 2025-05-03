@@ -6,12 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
 import com.evaluation.erpnext_spring.dto.payments.PaymentDTO;
-import com.evaluation.erpnext_spring.dto.payments.PaymentResponseDTO;
+import com.evaluation.erpnext_spring.dto.payments.PaymentResponseGroupDTO;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class PaymentService {
@@ -31,7 +32,7 @@ public class PaymentService {
         this.restTemplate = restTemplate;
     }
 
-    public PaymentResponseDTO processPayment(PaymentDTO paymentDTO) {
+    public PaymentResponseGroupDTO processPayment(PaymentDTO paymentDTO) {
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                 .getRequest().getSession();
         String sid = (String) session.getAttribute("sid");
@@ -51,7 +52,7 @@ public class PaymentService {
         HttpEntity<PaymentDTO> request = new HttpEntity<>(paymentDTO, headers);
 
         try {
-            ResponseEntity<PaymentResponseDTO> response = restTemplate.postForEntity(url, request, PaymentResponseDTO.class);
+            ResponseEntity<PaymentResponseGroupDTO> response = restTemplate.postForEntity(url, request, PaymentResponseGroupDTO.class);
 
             if (!response.getStatusCode().is2xxSuccessful()) {
                 throw new RuntimeException("Erreur ERPNext - Code HTTP: " + response.getStatusCode() + " - Message: " + response.getBody());
@@ -84,14 +85,17 @@ public class PaymentService {
             throw new RuntimeException("Session non authentifiée");
         }
     
-        String url = erpnextApiUrl + "/api/resource/Payment Entry/" + paymentEntryName + "/submit";
+        String url = erpnextApiUrl + "/api/resource/Payment Entry/" + paymentEntryName ;
     
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set("Authorization", "token " + erpnextApiKey + ":" + erpnextApiSecret);
         headers.set("Cookie", "sid=" + sid);
+
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("run_method", "submit");
     
-        HttpEntity<String> request = new HttpEntity<>(headers);
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(requestBody, headers);
     
         try {
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
@@ -114,5 +118,6 @@ public class PaymentService {
             throw new RuntimeException("Erreur inattendue lors de la validation du paiement: " + e.getMessage(), e);
         }
     }
+
     
 }
