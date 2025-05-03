@@ -24,6 +24,12 @@ public class RequestForQuotationService {
     @Value("${erpnext.api.url}")
     private String erpnextApiUrl;
 
+    @Value("${erpnext.api.key}")
+    private String erpnextApiKey;
+
+    @Value("${erpnext.api.secret}")
+    private String erpnextApiSecret;
+
     public RequestForQuotationListResponse getQuotationsBySuppliers(HttpSession session, List<RequestForQuotationSupplierDTO> supplierDTOList, int page, int size) {
         String sid = (String) session.getAttribute("sid");
         if (sid == null || sid.isEmpty()) {
@@ -58,6 +64,7 @@ public class RequestForQuotationService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("Cookie", "sid=" + sid);
+        headers.set("Authorization", "token " + erpnextApiKey + ":" + erpnextApiSecret);
 
         HttpEntity<String> request = new HttpEntity<>(headers);
 

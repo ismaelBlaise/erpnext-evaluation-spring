@@ -20,6 +20,12 @@ public class SupplierService {
     @Value("${erpnext.api.url}")
     private String erpnextApiUrl;
 
+    @Value("${erpnext.api.key}")
+    private String erpnextApiKey;
+
+    @Value("${erpnext.api.secret}")
+    private String erpnextApiSecret;
+
     public SupplierListResponse getAllSuppliers(HttpSession session, int start, int pageLength) {
         String sid = (String) session.getAttribute("sid");
         if (sid == null || sid.isEmpty()) {
@@ -31,6 +37,7 @@ public class SupplierService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("Cookie", "sid=" + sid);
+        headers.set("Authorization", "token " + erpnextApiKey + ":" + erpnextApiSecret);
     
         HttpEntity<String> request = new HttpEntity<>(headers);
     
@@ -66,7 +73,8 @@ public class SupplierService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("Cookie", "sid=" + sid);
-    
+        headers.set("Authorization", "token " + erpnextApiKey + ":" + erpnextApiSecret);
+        
         HttpEntity<String> request = new HttpEntity<>(headers);
     
         try {

@@ -79,7 +79,9 @@ public class PaymentController {
                 
             //     paymentDTO.setPaidAmount(null);
             // }
-             
+            System.out.println();
+            System.out.println(paymentDTO.getInvoiceName());
+            System.out.println();
             String paymentResult = paymentService.processPayment(paymentDTO);
             if (paymentDTO.getPaidAmount() == null || paymentDTO.getPaidAmount().compareTo(BigDecimal.ZERO) <= 0) {
                 throw new IllegalArgumentException("Le montant payé doit être supérieur à zéro");
