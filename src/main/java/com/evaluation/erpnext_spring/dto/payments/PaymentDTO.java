@@ -15,6 +15,12 @@ public class PaymentDTO {
     
     @JsonProperty("company")
     private String company;
+
+    @JsonProperty("received_amount")
+    private BigDecimal receivedAmount;
+
+    @JsonProperty("source_exchange_rate")
+    private BigDecimal sourceExchangeRate;
     
     @JsonProperty("paid_amount")
     private BigDecimal paidAmount;
@@ -45,6 +51,19 @@ public class PaymentDTO {
 
     @JsonProperty("currency")
     private String currency;
+
+    @JsonProperty("paid_from")
+    private String paidFrom;
+    
+    @JsonProperty("paid_from_account_currency")
+    private String paidFromAccountCurrency;
+    
+    @JsonProperty("paid_to")
+    private String paidTo;
+    
+    @JsonProperty("paid_to_account_currency")
+    private String paidToAccountCurrency = "USD"; // valeur par défaut
+    
     
     
 }

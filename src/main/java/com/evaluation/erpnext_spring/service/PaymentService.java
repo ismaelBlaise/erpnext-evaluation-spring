@@ -3,7 +3,7 @@ package com.evaluation.erpnext_spring.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -30,7 +30,7 @@ public class PaymentService {
         this.restTemplate = restTemplate;
     }
 
-    public String processPayment(PaymentDTO paymentDTO) throws Exception {
+    public String processPayment(PaymentDTO paymentDTO) {
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                 .getRequest().getSession();
         String sid = (String) session.getAttribute("sid");
@@ -49,12 +49,26 @@ public class PaymentService {
 
         HttpEntity<PaymentDTO> request = new HttpEntity<>(paymentDTO, headers);
 
-        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-        
-        if (!response.getStatusCode().is2xxSuccessful()) {
-            throw new RuntimeException("Erreur ERPNext: " + response.getBody());
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new RuntimeException("Erreur ERPNext - Code HTTP: " + response.getStatusCode() + " - Message: " + response.getBody());
+            }
+
+            return response.getBody();
+
+        } catch (HttpClientErrorException e) {
+             
+            throw new RuntimeException("Erreur côté client (4xx): " + e.getStatusCode() + " - " + e.getResponseBodyAsString(), e);
+        } catch (HttpServerErrorException e) {
+            throw new RuntimeException("Erreur côté serveur ERPNext (5xx): " + e.getStatusCode() + " - " + e.getResponseBodyAsString(), e);
+        } catch (ResourceAccessException e) {
+            throw new RuntimeException("Erreur d’accès au serveur ERPNext: " + e.getMessage(), e);
+        } catch (RestClientException e) {
+            throw new RuntimeException("Erreur lors de l’appel ERPNext: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur inattendue lors du traitement du paiement: " + e.getMessage(), e);
         }
-        
-        return response.getBody();
     }
 }

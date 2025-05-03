@@ -72,7 +72,13 @@ public class PaymentController {
             if (paymentDTO.getPaidAmount() == null || paymentDTO.getPaidAmount().compareTo(BigDecimal.ZERO) <= 0) {
                 throw new IllegalArgumentException("Le montant payé doit être supérieur à zéro");
             }
-
+            paymentDTO.setReceivedAmount(paymentDTO.getPaidAmount());
+            paymentDTO.setSourceExchangeRate(BigDecimal.valueOf(1.0));
+            
+            // if ("Receive".equals(paymentDTO.getPaymentType())) {
+                
+            //     paymentDTO.setPaidAmount(null);
+            // }
              
             String paymentResult = paymentService.processPayment(paymentDTO);
             if (paymentDTO.getPaidAmount() == null || paymentDTO.getPaidAmount().compareTo(BigDecimal.ZERO) <= 0) {
