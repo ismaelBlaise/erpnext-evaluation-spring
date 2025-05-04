@@ -80,15 +80,15 @@ public class PurchaseOrderService {
         String fields = "[\"name\",\"creation\",\"modified\",\"supplier\",\"supplier_name\",\"order_confirmation_no\"," +
                 "\"total_qty\",\"base_total\",\"base_grand_total\",\"grand_total\",\"rounded_total\",\"status\",\"transaction_date\"]";
     
-        // Construction du filtre avec le statut
+        
         String filters = String.format("[[\"supplier\", \"=\", \"%s\"]]", supplierId);
     
-        // Si le statut est non null, on l'ajoute dans le filtre
+        
         if (status != null && !status.isEmpty()) {
             filters = String.format("[[\"supplier\", \"=\", \"%s\"], [\"status\", \"=\", \"%s\"]]", supplierId, status);
         }
     
-        // URL sans pagination
+        
         String url = String.format("%s/api/resource/Purchase Order?filters=%s&fields=%s", 
                                    erpnextApiUrl, filters, fields);
     
