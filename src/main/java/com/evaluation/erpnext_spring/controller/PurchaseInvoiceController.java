@@ -1,6 +1,6 @@
 package com.evaluation.erpnext_spring.controller;
 
-import com.evaluation.erpnext_spring.dto.PurchaseInvoiceListResponse;
+import com.evaluation.erpnext_spring.dto.invoices.PurchaseInvoiceListResponse;
 import com.evaluation.erpnext_spring.enums.PurchaseInvoiceStatus;
 import com.evaluation.erpnext_spring.service.PurchaseInvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;

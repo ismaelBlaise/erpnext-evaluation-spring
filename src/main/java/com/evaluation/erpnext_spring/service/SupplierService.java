@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.evaluation.erpnext_spring.dto.SupplierListResponse;
+
+import com.evaluation.erpnext_spring.dto.suppliers.SupplierListResponse;
+
 import jakarta.servlet.http.HttpSession;
 import java.util.Collections;
 
@@ -18,6 +20,12 @@ public class SupplierService {
     @Value("${erpnext.api.url}")
     private String erpnextApiUrl;
 
+    @Value("${erpnext.api.key}")
+    private String erpnextApiKey;
+
+    @Value("${erpnext.api.secret}")
+    private String erpnextApiSecret;
+
     public SupplierListResponse getAllSuppliers(HttpSession session, int start, int pageLength) {
         String sid = (String) session.getAttribute("sid");
         if (sid == null || sid.isEmpty()) {
@@ -29,6 +37,7 @@ public class SupplierService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("Cookie", "sid=" + sid);
+        headers.set("Authorization", "token " + erpnextApiKey + ":" + erpnextApiSecret);
     
         HttpEntity<String> request = new HttpEntity<>(headers);
     
@@ -64,7 +73,8 @@ public class SupplierService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("Cookie", "sid=" + sid);
-    
+        headers.set("Authorization", "token " + erpnextApiKey + ":" + erpnextApiSecret);
+        
         HttpEntity<String> request = new HttpEntity<>(headers);
     
         try {

@@ -1,12 +1,14 @@
 package com.evaluation.erpnext_spring.service;
 
-import com.evaluation.erpnext_spring.dto.RequestForQuotationSupplierDTO;
-import com.evaluation.erpnext_spring.dto.RequestForQuotationSupplierListResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.evaluation.erpnext_spring.dto.quotations.RequestForQuotationSupplierDTO;
+import com.evaluation.erpnext_spring.dto.quotations.RequestForQuotationSupplierListResponse;
+
 import jakarta.servlet.http.HttpSession;
 
 import java.util.Collections;
@@ -20,6 +22,12 @@ public class RequestForQuotationSupplierService {
 
     @Value("${erpnext.api.url}")
     private String erpnextApiUrl;
+
+    @Value("${erpnext.api.key}")
+    private String erpnextApiKey;
+
+    @Value("${erpnext.api.secret}")
+    private String erpnextApiSecret;
 
     @SuppressWarnings("null")
     public List<RequestForQuotationSupplierDTO> getSuppliersBySupplierName(HttpSession session, String supplierName) {
@@ -45,6 +53,7 @@ public class RequestForQuotationSupplierService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("Cookie", "sid=" + sid);
+        headers.set("Authorization", "token " + erpnextApiKey + ":" + erpnextApiSecret);
 
         HttpEntity<String> request = new HttpEntity<>(headers);
 

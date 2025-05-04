@@ -1,4 +1,4 @@
-package com.evaluation.erpnext_spring.dto;
+package com.evaluation.erpnext_spring.dto.orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.evaluation.erpnext_spring.controller;
 
-import com.evaluation.erpnext_spring.dto.SupplierQuotationListResponse;
+import com.evaluation.erpnext_spring.dto.quotations.SupplierQuotationListResponse;
 import com.evaluation.erpnext_spring.service.SupplierQuotationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

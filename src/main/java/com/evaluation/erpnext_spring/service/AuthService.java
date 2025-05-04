@@ -5,12 +5,13 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import com.evaluation.erpnext_spring.dto.auth.ERPNextAuthResponse;
+import com.evaluation.erpnext_spring.dto.auth.LoginRequestDTO;
+import com.evaluation.erpnext_spring.dto.auth.LoginResponseDTO;
+
 import java.util.Collections;
 import java.util.List;
-
-import com.evaluation.erpnext_spring.dto.ERPNextAuthResponse;
-import com.evaluation.erpnext_spring.dto.LoginRequestDTO;
-import com.evaluation.erpnext_spring.dto.LoginResponseDTO;
 
 @Service
 public class AuthService {

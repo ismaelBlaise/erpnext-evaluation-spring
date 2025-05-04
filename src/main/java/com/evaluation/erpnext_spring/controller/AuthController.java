@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.evaluation.erpnext_spring.dto.LoginRequestDTO;
-import com.evaluation.erpnext_spring.dto.LoginResponseDTO;
+import com.evaluation.erpnext_spring.dto.auth.LoginRequestDTO;
+import com.evaluation.erpnext_spring.dto.auth.LoginResponseDTO;
 import com.evaluation.erpnext_spring.service.AuthService;
 
 import jakarta.servlet.http.HttpSession;
