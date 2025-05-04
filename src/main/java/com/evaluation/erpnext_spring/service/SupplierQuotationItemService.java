@@ -2,6 +2,8 @@ package com.evaluation.erpnext_spring.service;
 
 import com.evaluation.erpnext_spring.dto.quotations.SupplierQuotationItemListResponse;
 import com.evaluation.erpnext_spring.dto.quotations.UpdateItemRateResponseDTO;
+import com.evaluation.erpnext_spring.dto.quotations.UpdateItemRateResponseGroup;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -104,7 +106,7 @@ public class SupplierQuotationItemService {
     // }
 
 
-    @SuppressWarnings("null")
+    @SuppressWarnings({ "null", "unchecked" })
     public UpdateItemRateResponseDTO updateSupplierQuotationItemRate(HttpSession session, String itemName, double newRate) {
         String sid = (String) session.getAttribute("sid");
         if (sid == null || sid.isEmpty()) {
@@ -128,15 +130,17 @@ public class SupplierQuotationItemService {
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(updateFields, headers);
 
         try {
-            ResponseEntity<UpdateItemRateResponseDTO> response = restTemplate.exchange(
+            @SuppressWarnings("rawtypes")
+            ResponseEntity<Map> response = restTemplate.exchange(
                     apiUrl,
                     HttpMethod.PUT,
                     request,
-                    UpdateItemRateResponseDTO.class 
+                    Map.class 
             );
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                return response.getBody();
+                Map<String, Object> body = response.getBody();
+                return new UpdateItemRateResponseDTO("success", "Mise a jour reussie");
             } else {
                 return new UpdateItemRateResponseDTO("error", "Erreur HTTP: " + response.getStatusCode());
             }
