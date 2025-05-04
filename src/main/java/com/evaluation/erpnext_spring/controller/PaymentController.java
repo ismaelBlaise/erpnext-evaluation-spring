@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.evaluation.erpnext_spring.dto.company.CompanyListResponseDTO;
 import com.evaluation.erpnext_spring.dto.invoices.PurchaseInvoice;
 import com.evaluation.erpnext_spring.dto.payments.PaymentDTO;
 import com.evaluation.erpnext_spring.dto.payments.PaymentResponseDTO;
 import com.evaluation.erpnext_spring.dto.payments.PaymentResponseGroupDTO;
+import com.evaluation.erpnext_spring.service.CompanyService;
 import com.evaluation.erpnext_spring.service.PaymentService;
 import com.evaluation.erpnext_spring.service.PurchaseInvoiceService;
 
@@ -33,6 +35,9 @@ public class PaymentController {
     @Autowired
     private PurchaseInvoiceService purchaseInvoiceService;
 
+    @Autowired
+    private CompanyService companyService;
+
     @GetMapping
     public ModelAndView paymentForm(@RequestParam String facture, HttpSession session) {
         ModelAndView modelAndView = new ModelAndView("template");
@@ -47,9 +52,12 @@ public class PaymentController {
             paymentDTO.setPaidAmount(invoice.getOutstandingAmount());
             paymentDTO.setAllocatedAmount(invoice.getOutstandingAmount());
             paymentDTO.setParty(invoice.getSupplier());  
+
+            CompanyListResponseDTO companyListResponseDTO=companyService.getCompanies(session);
             
             modelAndView.addObject("page", "invoices/payment");
             modelAndView.addObject("invoice", invoice);
+            modelAndView.addObject("companies", companyListResponseDTO.getData());
             modelAndView.addObject("date",invoice.getPostingDate());
             modelAndView.addObject("paymentDTO", paymentDTO); 
             

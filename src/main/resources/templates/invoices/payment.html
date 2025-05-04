@@ -93,7 +93,11 @@
                         <div>
                             <label for="company" class="block text-sm font-medium text-gray-700 mb-1">Société</label>
                             <select id="company" th:field="*{company}" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                                <option th:value="${invoice.company}" th:text="${invoice.company}" selected></option>
+                                <option th:each="companyItem : ${companies}" 
+                                        th:value="${companyItem.name}" 
+                                        th:text="${companyItem.name}" 
+                                        th:selected="${invoice.company == companyItem.name}">
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -199,6 +203,8 @@
                                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                                 <option value="Bank Account - ED" selected>Bank Account - ED</option>
                                 <option value="Cash - ED">Cash - ED</option>
+                                <option value="Bank Account - ED" selected>Bank Account - E</option>
+                                <option value="Cash - ED">Cash - E</option>
                             </select>
                         </div>
                         
@@ -217,6 +223,7 @@
                             <select id="paidTo" th:field="*{paidTo}"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                                 <option value="Creditors - ED" selected>Creditors - ED</option>
+                                <option value="Creditors - ED" selected>Creditors - E</option>
                             </select>
                         </div>
                         
