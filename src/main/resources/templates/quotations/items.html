@@ -7,10 +7,28 @@
                 <p class="text-sm text-gray-500 mt-1">Liste des articles pour le devis <b th:text="${parentId}"></b></p>
                 
                 
-                <th:block th:if="${quotationInfo.status == 'Submitted'}">
-                    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded mt-4">
-                        <p class="font-medium">⚠️ Ce devis a été validé et n’est plus modifiable.</p>
+                <th:block th:if="${quotationInfo.status == 'Submitted' or quotationInfo.status == 'Cancelled'}">
+                    <div th:classappend="${quotationInfo.status == 'Submitted'} ? 'bg-yellow-100 border-yellow-500 text-yellow-700' : 'bg-red-100 border-red-500 text-red-700'"
+                        class="border-l-4 p-4 rounded mt-4">
+                        <p class="font-medium">
+                            <span th:if="${quotationInfo.status == 'Submitted'}">⚠️ Ce devis a été validé et n'est plus modifiable.</span>
+                            <span th:if="${quotationInfo.status == 'Cancelled'}">❌ Ce devis a été annulé et n'est plus modifiable.</span>
+                        </p>
                     </div>
+                </th:block>
+
+
+                <th:block th:unless="${quotationInfo.status == 'Submitted' or quotationInfo.status == 'Cancelled'}">
+                    <form th:action="@{/quotations/submit}" method="post" class="mt-4 sm:mt-0">
+                        <input type="hidden" name="quotationName" th:value="${parentId}" />
+                        <button type="submit" 
+                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            Valider le devis
+                        </button>
+                    </form>
                 </th:block>
             </div>
         </div>
