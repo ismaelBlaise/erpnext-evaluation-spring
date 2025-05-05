@@ -3,12 +3,17 @@ package com.evaluation.erpnext_spring.controller;
 import com.evaluation.erpnext_spring.dto.quotations.SupplierQuotationListResponse;
 import com.evaluation.erpnext_spring.dto.supplier_quotations.SpqListResponse;
 import com.evaluation.erpnext_spring.service.SupplierQuotationService;
+
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -73,5 +78,30 @@ public class SupplierQuotationController {
 
         return modelAndView;
     }
-   
+    
+
+    @PostMapping("/submit")
+    public ModelAndView validateSupplierQuotation(
+            HttpSession session,
+            @RequestParam String quotationName,
+            @RequestParam(required = false) String redirectUrl,
+            RedirectAttributes redirectAttributes) {
+        
+        ModelAndView modelAndView = new ModelAndView();
+        
+        try {
+            Map<String, Object> validationResult = supplierQuotationService.validateSupplierQuotation(session, quotationName);
+            
+            redirectAttributes.addFlashAttribute("success", "Devis validé avec succès");
+            redirectAttributes.addFlashAttribute("quotationStatus", validationResult.get("status"));
+            
+            modelAndView.setViewName("redirect:/quotation-items?parentId=" + quotationName);
+            
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Erreur lors de la validation");
+            modelAndView.setViewName("redirect:/quotation-items?parentId=" + quotationName);
+        }
+        
+        return modelAndView;
+    }
 }

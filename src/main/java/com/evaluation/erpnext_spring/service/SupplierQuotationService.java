@@ -12,6 +12,8 @@ import com.evaluation.erpnext_spring.dto.supplier_quotations.SpqMessage;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class SupplierQuotationService {
@@ -112,4 +114,46 @@ public class SupplierQuotationService {
             throw new RuntimeException("Error while fetching SPQs: " + e.getMessage(), e);
         }
     }
+
+
+    
+    @SuppressWarnings({ "null", "unchecked", "rawtypes" })
+    public Map<String, Object> validateSupplierQuotation(HttpSession session, String quotationName) {
+        String sid = (String) session.getAttribute("sid");
+        if (sid == null || sid.isEmpty()) {
+            throw new RuntimeException("Session not authenticated");
+        }
+    
+        String url =erpnextApiUrl+"/api/resource/Supplier Quotation/"+quotationName;
+        
+        System.out.println(url);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Cookie", "sid=" + sid);
+        headers.set("Authorization", "token " + erpnextApiKey + ":" + erpnextApiSecret);
+        
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("run_method", "submit");
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(requestBody, headers);
+    
+        try {
+            ResponseEntity<Map> response = restTemplate.exchange(
+                url,
+                HttpMethod.POST,
+                request,
+                Map.class
+            );
+    
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                return (Map<String, Object>) response.getBody().get("data");
+            } else {
+                throw new RuntimeException("Failed to validate supplier quotation. Status code: " + 
+                                        response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error while validating supplier quotation: " + e.getMessage(), e);
+        }
+    }
+
 }
