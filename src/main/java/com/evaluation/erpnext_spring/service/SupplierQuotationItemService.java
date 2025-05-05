@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
 import jakarta.servlet.http.HttpSession;
-
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class SupplierQuotationItemService {
@@ -67,37 +66,81 @@ public class SupplierQuotationItemService {
 
 
 
-    @SuppressWarnings("null")
+    // @SuppressWarnings("null")
+    // public UpdateItemRateResponseDTO updateSupplierQuotationItemRate(HttpSession session, String itemName, double newRate) {
+    //     String sid = (String) session.getAttribute("sid");
+    //     if (sid == null || sid.isEmpty()) {
+    //         throw new RuntimeException("Session not authenticated");
+    //     }
+
+    //     String apiUrl = String.format("%s/api/method/erpnext.eval.update_price.update_supplier_quotation_item_rate", erpnextApiUrl);
+
+        
+    //     @SuppressWarnings("deprecation")
+    //     UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl)
+    //             .queryParam("item_name", itemName)
+    //             .queryParam("new_rate", newRate);
+
+    //     HttpHeaders headers = new HttpHeaders();
+    //     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    //     headers.add("Cookie", "sid=" + sid);
+
+    //     HttpEntity<String> request = new HttpEntity<>(headers);
+
+    //     try {
+    //         ResponseEntity<UpdateItemRateResponseGroup> response = restTemplate.exchange(
+    //                 builder.toUriString(),
+    //                 HttpMethod.POST,
+    //                 request,
+    //                 UpdateItemRateResponseGroup.class
+    //         );
+
+    //         if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+    //             return response.getBody().getMessage();
+    //         } else {
+    //             return new UpdateItemRateResponseDTO("error", "Erreur HTTP: " + response.getStatusCode());
+    //         }
+    //     } catch (Exception e) {
+    //         throw new RuntimeException("Erreur lors de la mise à jour du prix: " + e.getMessage(), e);
+    //     }
+    // }
+
+
+    @SuppressWarnings({ "null", "unchecked" })
     public UpdateItemRateResponseDTO updateSupplierQuotationItemRate(HttpSession session, String itemName, double newRate) {
         String sid = (String) session.getAttribute("sid");
         if (sid == null || sid.isEmpty()) {
             throw new RuntimeException("Session not authenticated");
         }
 
-        String apiUrl = String.format("%s/api/method/erpnext.eval.update_price.update_supplier_quotation_item_rate", erpnextApiUrl);
-
-        
-        @SuppressWarnings("deprecation")
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl)
-                .queryParam("item_name", itemName)
-                .queryParam("new_rate", newRate);
+       
+        String apiUrl = String.format("%s/api/resource/Supplier Quotation Item/%s", erpnextApiUrl, itemName);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Cookie", "sid=" + sid);
+        headers.set("Authorization", "token " + erpnextApiKey + ":" + erpnextApiSecret);
 
-        HttpEntity<String> request = new HttpEntity<>(headers);
+        
+        Map<String, Object> updateFields = new HashMap<>();
+        updateFields.put("rate", newRate);
+
+       
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(updateFields, headers);
 
         try {
-            ResponseEntity<UpdateItemRateResponseGroup> response = restTemplate.exchange(
-                    builder.toUriString(),
-                    HttpMethod.POST,
+            @SuppressWarnings("rawtypes")
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    apiUrl,
+                    HttpMethod.PUT,
                     request,
-                    UpdateItemRateResponseGroup.class
+                    Map.class 
             );
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                return response.getBody().getMessage();
+                Map<String, Object> body = response.getBody();
+                return new UpdateItemRateResponseDTO("success", "Mise a jour reussie");
             } else {
                 return new UpdateItemRateResponseDTO("error", "Erreur HTTP: " + response.getStatusCode());
             }
@@ -105,4 +148,5 @@ public class SupplierQuotationItemService {
             throw new RuntimeException("Erreur lors de la mise à jour du prix: " + e.getMessage(), e);
         }
     }
+
 }

@@ -11,6 +11,12 @@ public enum PurchaseOrderStatus {
     CLOSED("Closed", "Clôturé"),
     DELIVERED("Delivered", "Livré");
 
+
+    // RECEIVED("","Recu"),
+    // PAID("Paid","Paye");
+
+    
+
     private final String key;
     private final String label;
 
