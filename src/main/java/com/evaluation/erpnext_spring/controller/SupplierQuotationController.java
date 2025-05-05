@@ -1,7 +1,6 @@
 package com.evaluation.erpnext_spring.controller;
 
 import com.evaluation.erpnext_spring.dto.quotations.SupplierQuotationListResponse;
-import com.evaluation.erpnext_spring.dto.requests_for_quotation.RfqListResponse;
 import com.evaluation.erpnext_spring.dto.supplier_quotations.SpqListResponse;
 import com.evaluation.erpnext_spring.service.SupplierQuotationService;
 import org.springframework.beans.factory.annotation.Autowired;

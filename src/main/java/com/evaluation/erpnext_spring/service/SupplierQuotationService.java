@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.evaluation.erpnext_spring.dto.quotations.SupplierQuotationListResponse;
-import com.evaluation.erpnext_spring.dto.requests_for_quotation.RfqListResponse;
-import com.evaluation.erpnext_spring.dto.requests_for_quotation.RfqMessage;
 import com.evaluation.erpnext_spring.dto.supplier_quotations.SpqListResponse;
 import com.evaluation.erpnext_spring.dto.supplier_quotations.SpqMessage;
 
