@@ -6,15 +6,11 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.evaluation.erpnext_spring.dto.orders.PurchaseOrderDTO;
 import com.evaluation.erpnext_spring.dto.orders.PurchaseOrderListResponse;
 
 import jakarta.servlet.http.HttpSession;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class PurchaseOrderService {

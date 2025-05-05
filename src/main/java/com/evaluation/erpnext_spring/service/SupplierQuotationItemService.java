@@ -2,8 +2,6 @@ package com.evaluation.erpnext_spring.service;
 
 import com.evaluation.erpnext_spring.dto.quotations.SupplierQuotationItemListResponse;
 import com.evaluation.erpnext_spring.dto.quotations.UpdateItemRateResponseDTO;
-import com.evaluation.erpnext_spring.dto.quotations.UpdateItemRateResponseGroup;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -139,6 +137,7 @@ public class SupplierQuotationItemService {
             );
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                @SuppressWarnings("unused")
                 Map<String, Object> body = response.getBody();
                 return new UpdateItemRateResponseDTO("success", "Mise a jour reussie");
             } else {
