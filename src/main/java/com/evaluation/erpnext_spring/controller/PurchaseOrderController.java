@@ -1,6 +1,7 @@
 package com.evaluation.erpnext_spring.controller;
 
 import com.evaluation.erpnext_spring.dto.orders.PurchaseOrderListResponse;
+import com.evaluation.erpnext_spring.dto.purchase_orders.PcoListResponse;
 import com.evaluation.erpnext_spring.enums.PurchaseOrderStatus;
 import com.evaluation.erpnext_spring.service.PurchaseOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +28,27 @@ public class PurchaseOrderController {
                                           @RequestParam(defaultValue = "5") int size) {
         ModelAndView modelAndView = new ModelAndView("template");
         modelAndView.addObject("page", "orders/list");
-        PurchaseOrderListResponse response=null;
+        // PurchaseOrderListResponse response=null;
+        PcoListResponse pcoListResponse=null;
         try {
-            if(status == null || status.trim().isEmpty()){
-                response = purchaseOrderService.getPurchaseOrdersBySupplier(session, supplierId, page, size);
-            }
-            else{
-                response= purchaseOrderService.getPurchaseOrdersBySupplierAndStatus(session,supplierId,status);
-            }
+            // if(status == null || status.trim().isEmpty()){
+                
+            //     // response = purchaseOrderService.getPurchaseOrdersBySupplier(session, supplierId, page, size);
+            //     pcoListResponse=purchaseOrderService.getOrdersByStatus(session, null, supplierId, page, size);
+                
+            // }
+            // else{
+            //     // response= purchaseOrderService.getPurchaseOrdersBySupplierAndStatus(session,supplierId,status);
+            //     pcoListResponse=purchaseOrderService.getOrdersByStatus(session, status, supplierId, page, size);
+            // }
 
-            modelAndView.addObject("purchaseOrders", response.getData());
+            // modelAndView.addObject("purchaseOrders", response.getData());
+            
+            
+            pcoListResponse=purchaseOrderService.getOrdersByStatus(session, status, supplierId);
+            System.out.println(pcoListResponse.getData().size());
+            modelAndView.addObject("purchaseOrders", pcoListResponse.getData());
+
             modelAndView.addObject("purchaseStatus", PurchaseOrderStatus.values());
             modelAndView.addObject("currentPage", page);
             modelAndView.addObject("pageSize", size);

@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.evaluation.erpnext_spring.dto.orders.PurchaseOrderListResponse;
 import com.evaluation.erpnext_spring.dto.purchase_orders.PcoListResponse;
@@ -122,21 +124,33 @@ public class PurchaseOrderService {
 
 
 
-
-     @SuppressWarnings("null")
-    public PcoListResponse getOrdersByStatus(HttpSession session, String status, int page, int pageSize) {
+    @SuppressWarnings({ "null", "deprecation" })
+    public PcoListResponse getOrdersByStatus(HttpSession session, String status, String supplierName) {
+        if (session == null) {
+            throw new IllegalArgumentException("Session cannot be null");
+        }
+        
         String sid = (String) session.getAttribute("sid");
         if (sid == null || sid.isEmpty()) {
             throw new RuntimeException("Session not authenticated");
         }
 
-        String url = String.format("%s/api/method/erpnext.eval.purchase_order.get_orders_by_status?status=%s&page=%d&page_size=%d",
-                erpnextApiUrl, 
-                status,  
-                page,
-                pageSize
-        );
+       
 
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(erpnextApiUrl)
+                .path("/api/method/erpnext.eval.purchase_order.get_orders_by_status");
+
+        if (supplierName != null && !supplierName.isEmpty()) {
+            builder.queryParam("supplier_name", supplierName);
+        }
+        
+        if (status != null && !status.isEmpty()) {
+            builder.queryParam("status", status);
+        }
+
+        String url=builder.toUriString().replace("%20", " ");
+       
+        // Préparation des headers
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("Cookie", "sid=" + sid);
@@ -146,19 +160,24 @@ public class PurchaseOrderService {
 
         try {
             ResponseEntity<PcoMessage> response = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                request,
-                PcoMessage.class
+                    url,
+                    HttpMethod.GET,
+                    request,
+                    PcoMessage.class
             );
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                return response.getBody().getMessage();
+                
+                PcoListResponse responseBody = response.getBody().getMessage();
+                if (responseBody == null) {
+                    throw new RuntimeException("Empty response body from ERPNext API");
+                }
+                return responseBody;
             } else {
-                throw new RuntimeException("Failed to fetch PCOs: " + response.getStatusCode());
+                throw new RuntimeException("Failed to fetch PCOs. Status code: " + response.getStatusCode());
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Error while fetching PCOs: " + e.getMessage(), e);
+        } catch (RestClientException e) {
+            throw new RuntimeException("Error while communicating with ERPNext API: " + e.getMessage(), e);
         }
     }
     
