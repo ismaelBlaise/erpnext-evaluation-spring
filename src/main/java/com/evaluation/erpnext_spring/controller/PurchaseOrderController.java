@@ -37,7 +37,7 @@ public class PurchaseOrderController {
             }
 
             modelAndView.addObject("purchaseOrders", response.getData());
-             modelAndView.addObject("purchaseStatus", PurchaseOrderStatus.values());
+            modelAndView.addObject("purchaseStatus", PurchaseOrderStatus.values());
             modelAndView.addObject("currentPage", page);
             modelAndView.addObject("pageSize", size);
             modelAndView.addObject("supplier", supplierId);
