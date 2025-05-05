@@ -225,7 +225,7 @@ public class PurchaseOrderService {
     //     HttpEntity<String> request = new HttpEntity<>(headers);
     
     //     try {
-    //         ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
+    //         ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod. , request, Map.class);
     //         Map<String, Object> data = (Map<String, Object>) response.getBody().get("data");
     //         if (data != null) {
     //             Integer docstatus = (Integer) data.get("docstatus");
