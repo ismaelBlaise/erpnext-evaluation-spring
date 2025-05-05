@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.evaluation.erpnext_spring.dto.quotations.SupplierQuotationListResponse;
+import com.evaluation.erpnext_spring.dto.requests_for_quotation.RfqListResponse;
+import com.evaluation.erpnext_spring.dto.requests_for_quotation.RfqMessage;
+import com.evaluation.erpnext_spring.dto.supplier_quotations.SpqListResponse;
+import com.evaluation.erpnext_spring.dto.supplier_quotations.SpqMessage;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.Collections;
@@ -67,6 +71,47 @@ public class SupplierQuotationService {
             }
         } catch (Exception e) {
             throw new RuntimeException("Error while fetching supplier quotations: " + e.getMessage(), e);
+        }
+    }
+
+
+
+    @SuppressWarnings("null")
+    public SpqListResponse getSupplierQuotationByRqf(HttpSession session, String rqf, int page, int pageSize) {
+        String sid = (String) session.getAttribute("sid");
+        if (sid == null || sid.isEmpty()) {
+            throw new RuntimeException("Session not authenticated");
+        }
+
+        String url = String.format("%s/api/method/erpnext.eval.supplier_quotation.get_supplier_quotations_by_rfq?request_for_quotation_name=%s&page=%d&page_size=%d",
+                erpnextApiUrl, 
+                rqf,  
+                page,
+                pageSize
+        );
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        headers.add("Cookie", "sid=" + sid);
+        headers.set("Authorization", "token " + erpnextApiKey + ":" + erpnextApiSecret);
+
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<SpqMessage> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                request,
+                SpqMessage.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                return response.getBody().getMessage();
+            } else {
+                throw new RuntimeException("Failed to fetch SPQs: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error while fetching SPQs: " + e.getMessage(), e);
         }
     }
 }

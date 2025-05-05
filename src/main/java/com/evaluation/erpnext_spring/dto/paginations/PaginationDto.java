@@ -1,4 +1,4 @@
-package com.evaluation.erpnext_spring.dto.requests_for_quotation;
+package com.evaluation.erpnext_spring.dto.paginations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

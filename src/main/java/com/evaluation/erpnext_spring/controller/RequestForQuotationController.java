@@ -35,7 +35,7 @@ public class RequestForQuotationController {
             modelAndView.addObject("currentPage", page);
             modelAndView.addObject("pageSize", size);
             modelAndView.addObject("supplier", supplierName);
-            modelAndView.addObject("pagination", response.getPagination());
+            // modelAndView.addObject("pagination", response.getPagination());
 
         } catch (Exception e) {
             e.printStackTrace();
