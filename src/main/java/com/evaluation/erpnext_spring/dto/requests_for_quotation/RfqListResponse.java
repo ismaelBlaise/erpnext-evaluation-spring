@@ -15,8 +15,8 @@ public class RfqListResponse {
     @JsonProperty("data")
     private List<RfqDto> data;
     
-    @JsonProperty("message")
-    private String message;
+    @JsonProperty("message_inf")
+    private String successMessage;
     
     @JsonProperty("pagination")
     private PaginationDto pagination;

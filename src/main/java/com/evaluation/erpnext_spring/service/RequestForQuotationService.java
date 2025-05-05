@@ -1,6 +1,8 @@
 package com.evaluation.erpnext_spring.service;
 
 import com.evaluation.erpnext_spring.dto.requests_for_quotation.RfqListResponse;
+import com.evaluation.erpnext_spring.dto.requests_for_quotation.RfqMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -25,6 +27,7 @@ public class RequestForQuotationService {
     @Value("${erpnext.api.secret}")
     private String erpnextApiSecret;
 
+    @SuppressWarnings("null")
     public RfqListResponse getRequestsForQuotationBySupplier(HttpSession session, String supplierName, int page, int pageSize) {
         String sid = (String) session.getAttribute("sid");
         if (sid == null || sid.isEmpty()) {
@@ -33,7 +36,7 @@ public class RequestForQuotationService {
 
         String url = String.format("%s/api/method/erpnext.eval.request_for_quotation.get_supplier_request_for_quotations?supplier_name=%s&page=%d&page_size=%d",
                 erpnextApiUrl, 
-                supplierName.replace(" ", "%20"), // encode spaces in URL
+                supplierName,  
                 page,
                 pageSize
         );
@@ -46,15 +49,15 @@ public class RequestForQuotationService {
         HttpEntity<String> request = new HttpEntity<>(headers);
 
         try {
-            ResponseEntity<RfqListResponse> response = restTemplate.exchange(
+            ResponseEntity<RfqMessage> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
                 request,
-                RfqListResponse.class
+                RfqMessage.class
             );
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                return response.getBody();
+                return response.getBody().getMessage();
             } else {
                 throw new RuntimeException("Failed to fetch RFQs: " + response.getStatusCode());
             }

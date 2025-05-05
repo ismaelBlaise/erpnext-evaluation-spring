@@ -27,10 +27,10 @@ public class RfqDto {
     private String messageForSupplier;
     
     @JsonProperty("creation")
-    private LocalDateTime creation;
+    private String creation;
     
     @JsonProperty("modified")
-    private LocalDateTime modified;
+    private String modified;
     
     @JsonProperty("quote_status")
     private String quoteStatus;
