@@ -45,7 +45,7 @@ public class PurchaseOrderController {
             
             
             pcoListResponse=purchaseOrderService.getOrdersByStatus(session, status, supplierId);
-            System.out.println(pcoListResponse.getData().size());
+            // System.out.println(pcoListResponse.getData().size());
             modelAndView.addObject("purchaseOrders", pcoListResponse.getData());
 
             modelAndView.addObject("purchaseStatus", PurchaseOrderStatus.values());

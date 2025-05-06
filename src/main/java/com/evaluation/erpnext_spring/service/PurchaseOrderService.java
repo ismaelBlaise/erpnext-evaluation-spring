@@ -150,7 +150,7 @@ public class PurchaseOrderService {
 
         String url=builder.toUriString().replace("%20", " ");
        
-        // Préparation des headers
+        System.out.println(url);
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.add("Cookie", "sid=" + sid);
